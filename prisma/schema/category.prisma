@@ -1,0 +1,13 @@
+model Category{
+    id String @id @default(uuid())
+    name String @unique
+    properties Property[] 
+
+
+    isDeleted Boolean @default(false)
+    deletedAt DateTime?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("categories")
+}

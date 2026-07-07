@@ -1,0 +1,46 @@
+enum Role{
+    TENANT
+    LANDLORD
+    ADMIN
+}
+enum UserStatus{
+    BAN
+    UNBAN
+}
+// enum PropertyCategory{
+//     APARTMENT
+//     HOUSE
+//     STUDIO
+//     SHOP
+//     OFFICE
+// }
+enum PropertyRentRequestStatus{
+    PENDING
+    APPROVED
+    REJECTED
+}
+enum RentStatus{
+    RENTED
+    AVAILABLE
+}
+enum PaymentMethod{
+    CARD
+    WALLET
+    BANK_TRANSFER
+}
+enum PaymentProvider{
+    STRIPE
+    SSLCOMMERZ
+}
+enum PropertyAmenity{
+    WIFI
+    PARKING
+    AIR_CONDITIONING
+    HEATING
+    KITCHEN
+    WASHER
+    DRYER
+    SWIMMING_POOL
+    GYM
+    ELEVATOR
+}

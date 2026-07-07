@@ -1,0 +1,14 @@
+model Payment{
+    id String @id @default(uuid())
+    transactionId String @unique
+
+    rentalRequestId String @unique
+    rentalRequest RentalRequest @relation(name: "PaymentToRentalRequest", fields: [rentalRequestId], references: [id], onDelete:Cascade)
+
+    amount Int 
+    method PaymentMethod @default(CARD)
+    provider PaymentProvider @default(STRIPE)
+    paidAt DateTime @default(now())
+
+    @@map("payments")
+}

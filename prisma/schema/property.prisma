@@ -1,0 +1,29 @@
+model Property{
+    id String @id @default(uuid())
+    propertyCategoryId String
+    category Category @relation( fields: [propertyCategoryId], references: [id], onDelete: Restrict)
+    rentStatus RentStatus
+
+    landlordId String 
+    landlord User @relation("OwnProperties", fields: [landlordId], references: [id], onDelete: Restrict)
+   
+    propertyRentRequests RentalRequest[] @relation("PropertyRentalRequests")
+
+    approvedTenantId String? 
+    approvedTenant User? @relation("ApprovedRentalProperties", fields: [approvedTenantId], references: [id], onDelete: SetNull)
+
+    propertyReviews Review[]
+
+    rentPrice Int
+    amenities PropertyAmenity[]
+
+    isDeleted Boolean @default(false)
+    deletedAt DateTime?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([propertyCategoryId])
+    @@index([landlordId])
+    @@index([approvedTenantId])
+    @@map("properties")
+}

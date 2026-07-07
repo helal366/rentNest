@@ -1,0 +1,24 @@
+import cookieParser from "cookie-parser";
+import express, { Application, Request, Response } from "express";
+import cors from "cors";
+import { envVars } from "./config";
+import { notFound } from "./middlewares/notFound";
+import { globalErrorHandler } from "./utils/globalErrorHandler";
+import { authRouter } from "./modules/auth/auth_routes";
+
+const app:Application = express();
+app.use(cors({
+    origin: envVars.APP_URL,
+    credentials: true,
+}))
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
+app.use(cookieParser())
+app.get("/", (req:Request,res:Response)=>{
+    res.send("This is a web site to rent a nice nest for you and your family.")
+});
+
+app.use("/api/auth", authRouter);
+app.use(notFound);
+app.use(globalErrorHandler);
+export default app;
