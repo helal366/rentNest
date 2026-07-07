@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "../../utils/globalErrorHelper";
 import { ILoginUser, IRegisterUser } from "./auth_interfaces";
-import { Role } from "../../../generated/prisma/enums";
+import { Role, UserStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import bcrypt from "bcryptjs";
 import { envVars } from "../../config";
@@ -117,9 +117,37 @@ const getAuthMeServices = async (userId:string)=>{
   return {
     user
   }
-}
+};
+const refreshTokenServices=async(refreshToken:string)=>{
+  const verifiedRefreshToken = jwtTokens.verifyToken(refreshToken, envVars.JWT_REFRESH_SECRET);
+  if(!verifiedRefreshToken.success){
+    throw new AppError(`${verifiedRefreshToken.error}`, StatusCodes.BAD_REQUEST);
+  }
+  const {id} = verifiedRefreshToken.data as JwtPayload;
+  const user = await prisma.user.findUniqueOrThrow({
+    where:{id},
+    omit:{password:true,}
+  });
+  if(user.userStatus===UserStatus.BAN){
+    throw new AppError("This user is banned", StatusCodes.BAD_REQUEST)
+  };
+  const jwtPayload:JwtPayload={
+    id,
+    name:user.name,
+    email:user.email,
+    role: user.role,
+    userStatus: user.userStatus
+  };
+  const accessToken = jwtTokens.createToken(
+    jwtPayload,
+    envVars.JWT_ACCESS_SECRET,
+    envVars.JWT_ACCESS_EXPIRES_IN as SignOptions
+  )
+  return {accessToken}
+};
 export const authServices = {
   authRegisterServices,
   authLoginServices,
-  getAuthMeServices
+  getAuthMeServices,
+  refreshTokenServices
 };

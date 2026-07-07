@@ -5,6 +5,7 @@ import { envVars } from "./config";
 import { notFound } from "./middlewares/notFound";
 import { globalErrorHandler } from "./utils/globalErrorHandler";
 import { authRouter } from "./modules/auth/auth_routes";
+import { landlordRouter } from "./modules/landlord/landlord_routes";
 
 const app:Application = express();
 app.use(cors({
@@ -19,6 +20,7 @@ app.get("/", (req:Request,res:Response)=>{
 });
 
 app.use("/api/auth", authRouter);
+app.use("/api/landlord/", landlordRouter)
 app.use(notFound);
 app.use(globalErrorHandler);
 export default app;

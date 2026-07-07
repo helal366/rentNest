@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { StatusCodes } from "http-status-codes";
@@ -40,9 +40,27 @@ const getAuthMeController = catchAsync(async(req:Request, res:Response)=>{
         message: "here is my user data",
         data: result
     })
+});
+const refreshTokenController=catchAsync(async(req:Request, res:Response,next:NextFunction)=>{
+    const refreshToken = req.cookies.refreshToken;
+    const result = await authServices.refreshTokenServices(refreshToken);
+    // res.cookie("accessToken",accessToken,{
+    //     httpOnly:true,
+    //     secure:false,
+    //     sameSite:"none",
+    //     maxAge:1000*60*60*24*1 
+    // });
+    setAuthTokensInCookies(res, result)
+    sendResponse(res, {
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: "Token refreshed successfully.",
+        data: result
+    })
 })
 export const authControllers ={
     authRegisterController,
     authLoginController,
-    getAuthMeController
+    getAuthMeController,
+    refreshTokenController
 }

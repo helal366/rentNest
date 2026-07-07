@@ -13,6 +13,7 @@ enum UserStatus{
 //     STUDIO
 //     SHOP
 //     OFFICE
+//     DUPLEX
 // }
 enum PropertyRentRequestStatus{
     PENDING
@@ -21,6 +22,7 @@ enum PropertyRentRequestStatus{
 }
 enum RentStatus{
     RENTED
+    PENDING
     AVAILABLE
 }
 enum PaymentMethod{
@@ -43,4 +45,26 @@ enum PropertyAmenity{
     SWIMMING_POOL
     GYM
     ELEVATOR
+}
+enum PropertyLocation{
+    JATRABARI
+    JURAINE
+    MOTIJHEEL
+    TIKATULI
+    DOYAGANJ
+    GULISTAN
+    MUGDA
+    MANDA
+    KAMLAPUR
+    FAKIRAPUL
+    GOLAPBAG
+    GOPIBAG
+    BASABO
+    KHILGAON
+    RAMPURA
+    BANASRI
+    HATIRJHEEL
+    DHANMONDI
+    JIGATOLA
+    FARMGATE
 }
