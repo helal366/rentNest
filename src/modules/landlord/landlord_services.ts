@@ -79,6 +79,7 @@ const creatPropertyServices = async (
   });
   return createdProperty;
 };
+
 const updatePropertyServices = async (
   propertyId: string,
   userId: string,
@@ -221,7 +222,7 @@ const updatePropertyServices = async (
         updateData.isDeleted = false;
       }
     }
-  }
+  };
 
   const updatedProperty = await prisma.property.update({
     where: {
@@ -231,6 +232,7 @@ const updatePropertyServices = async (
   });
   return { updatedProperty };
 };
+
 const deletePropertyServices = async (
   propertyId: string,
   userId: string,
@@ -280,6 +282,7 @@ const deletePropertyServices = async (
   });
   return result;
 };
+
 export const landlordServices = {
   creatPropertyServices,
   updatePropertyServices,
