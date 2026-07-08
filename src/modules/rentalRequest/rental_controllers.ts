@@ -24,6 +24,43 @@ const createRentalRequestController=catchAsync(async(req:Request, res:Response, 
         data: result
     })
 });
+const getRentalRequestsByTenantController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
+    if(!req.user){
+        throw new AppError("Please login",StatusCodes.UNAUTHORIZED)
+    };
+    const tenantId = req.user.id;
+    const tenantRole = req.user.role;
+    const result =await rentalRequestServices.getRentalRequestsByTenantServices(tenantId,tenantRole);
+    sendResponse(res, {
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: "Tenant rental requests retrieved successfully.",
+        data: result
+    })
+});
+const getRentalRequestByIdController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
+    const rentalRequestId = req.params.id;
+    if(!rentalRequestId || typeof rentalRequestId !=="string"){
+        throw new AppError("Rental request id is required as string.",StatusCodes.BAD_REQUEST)
+    };
+
+    if(!req.user){
+        throw new AppError("Please login.",StatusCodes.UNAUTHORIZED)
+    };
+    const payload = {
+        rentalRequestId ,
+        userId: req.user.id,
+        userRole: req.user.role
+    }
+    const result =await rentalRequestServices.getRentalRequestByIdServices(payload)
+    sendResponse(res, {
+        success: true,
+        statusCode: StatusCodes.OK,
+        data: result
+    })
+})
 export const rentalRequestControllers= {
-    createRentalRequestController
+    createRentalRequestController,
+    getRentalRequestsByTenantController,
+    getRentalRequestByIdController
 }

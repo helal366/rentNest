@@ -2,45 +2,111 @@ import { StatusCodes } from "http-status-codes";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/globalErrorHelper";
 import { Role } from "../../../generated/prisma/enums";
-interface ICreateRentalRequestPayload{
-    tenantId: string,
-    tenantRole: Role,
-    propertyId: string,
-    landlordId: string
-}
-const createRentalRequestServices=async(payload:ICreateRentalRequestPayload)=>{
-    const {tenantId, tenantRole, propertyId, landlordId} = payload;
-    if(tenantRole!==Role.TENANT){
-        throw new Error("Please login as TENANT.");
-    }
-    const property = await prisma.property.findUniqueOrThrow({
-        where: {
-            id: propertyId
-        }
-    });
-    if(landlordId !==property.landlordId){
-        throw new AppError("Property ownership mismatch: The selected property does not belong to the specified landlord.", StatusCodes.BAD_REQUEST)
-    };
-    const existingRequest =await prisma.rentalRequest.findUnique({
-        where:{
-            uniqueTenantPropertyRequest:{
-                tenantId,
-                propertyId
-            }
-        }
-    });
-    if(existingRequest){
-        throw new AppError("You have already submitted a rental request for this property.",StatusCodes.BAD_REQUEST)
-    }
-    const rentalRequest = await prisma.rentalRequest.create({
-        data:{
-            landlordId,
-            propertyId,
-            tenantId
-        }
-    });
-    return rentalRequest;
+import { ICreateRentalRequestPayload, IGetRentalRequestByIdPayload } from "./rental_interfaces";
+
+const createRentalRequestServices = async (
+  payload: ICreateRentalRequestPayload,
+) => {
+  const { tenantId, tenantRole, propertyId, landlordId } = payload;
+  if (tenantRole !== Role.TENANT) {
+    throw new Error("Please login as TENANT.");
+  }
+  const property = await prisma.property.findUniqueOrThrow({
+    where: {
+      id: propertyId,
+    },
+  });
+  if (landlordId !== property.landlordId) {
+    throw new AppError(
+      "Property ownership mismatch: The selected property does not belong to the specified landlord.",
+      StatusCodes.BAD_REQUEST,
+    );
+  }
+  const existingRequest = await prisma.rentalRequest.findUnique({
+    where: {
+      uniqueTenantPropertyRequest: {
+        tenantId,
+        propertyId,
+      },
+    },
+  });
+  if (existingRequest) {
+    throw new AppError(
+      "You have already submitted a rental request for this property.",
+      StatusCodes.BAD_REQUEST,
+    );
+  }
+  const rentalRequest = await prisma.rentalRequest.create({
+    data: {
+      landlordId,
+      propertyId,
+      tenantId,
+    },
+  });
+  return rentalRequest;
 };
-export const rentalRequestServices={
-    createRentalRequestServices
+
+const getRentalRequestsByTenantServices = async (
+  tenantId: string,
+  tenantRole: Role,
+) => {
+  if (tenantRole !== Role.TENANT) {
+    throw new AppError("Please login as TENANT", StatusCodes.FORBIDDEN);
+  }
+  const rentalRequests = await prisma.rentalRequest.findMany({
+    where: { tenantId },
+    include: {
+      rentalRequestProperty: {
+        select: {
+            id:true,
+            rentStatus: true,
+            approvedTenant: {
+                select: {
+                    name: true,
+                    email: true
+                }
+            },
+            location: true,
+            areaInSqFt: true,
+            amenities: true
+        }
+      },
+      landlord: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return rentalRequests;
+};
+
+const getRentalRequestByIdServices=async(payload:IGetRentalRequestByIdPayload)=>{
+    const {rentalRequestId, userId, userRole}= payload;
+    const rentalRequest = await prisma.rentalRequest.findUniqueOrThrow({
+        where: {
+            id: rentalRequestId
+        }
+    });
+    if(userRole===Role.TENANT){
+        if(userId !== rentalRequest.tenantId){
+            throw new AppError("Tenant is not the submitter of the rental request. ", StatusCodes.BAD_REQUEST)
+        }
+    };
+    if(userRole===Role.LANDLORD){
+        if(userId !== rentalRequest.landlordId){
+            throw new AppError("Landlord is not the owner of the property for which this rental request created",StatusCodes.BAD_REQUEST)
+        }
+    };
+    return {rentalRequest}
 }
+export const rentalRequestServices = {
+  createRentalRequestServices,
+  getRentalRequestsByTenantServices,
+  getRentalRequestByIdServices
+};
