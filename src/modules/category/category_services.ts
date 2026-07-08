@@ -11,7 +11,7 @@ const getAllCategoriesServices=async()=>{
     categoryDetails.map(cat=>{
         categories.push(cat.name)
     })
-    return {categories,categoryDetails}
+    return {categories}
 }
 export const categoryServices={
     getAllCategoriesServices
