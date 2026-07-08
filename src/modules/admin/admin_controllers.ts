@@ -40,7 +40,7 @@ const updateUserBanUnbanController=catchAsync(async(req: Request, res: Response,
     if(!userId || typeof userId !== "string"){
         throw new AppError("User id is required as string.", StatusCodes.BAD_REQUEST)
     };
-    const userStatus = req.body;
+    const {userStatus} = req.body;
     if(!userStatus){
         throw new AppError("User status is required.", StatusCodes.BAD_REQUEST)
     }

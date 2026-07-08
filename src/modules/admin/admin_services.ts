@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { UserStatus } from "../../../generated/prisma/enums";
+// import { UserStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/globalErrorHelper";
 import { validateUserStatus } from "../../helperFunction/userStatusvalidityCheck";
@@ -40,8 +40,8 @@ const getAllRentalRequestsServices=async()=>{
     return rentalRequests
 };
 
-const updateUserBanUnbanServices=async(userId:string, userStatus: UserStatus)=>{
-    validateUserStatus(userStatus)
+const updateUserBanUnbanServices=async(userId:string, userStatus: string)=>{
+    const validStatus=validateUserStatus(userStatus)
     const user = await prisma.user.findUniqueOrThrow({
         where:{id:userId},
         select: {
@@ -52,13 +52,13 @@ const updateUserBanUnbanServices=async(userId:string, userStatus: UserStatus)=>{
             userStatus: true
         }
     });
-    if(user.userStatus === userStatus){
+    if(user.userStatus === validStatus){
         throw new AppError("Already updated to the required status",StatusCodes.BAD_REQUEST)
     };
-    const updatedUser=prisma.user.update({
+    const updatedUser=await prisma.user.update({
         where:{id:userId},
         data:{
-            userStatus
+            userStatus: validStatus
         },
     });
     return updatedUser
