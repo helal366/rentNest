@@ -26,7 +26,7 @@ const updatePropertyController=catchAsync(async(req:Request, res:Response, next:
         throw new AppError("Property id is required.",StatusCodes.BAD_REQUEST)
     }
     if(!req.user){
-        throw new AppError("Please login", StatusCodes.BAD_REQUEST);
+        throw new AppError("Please login", StatusCodes.UNAUTHORIZED);
     };
     const userId= req.user?.id;
     const userRole = req.user?.role;
@@ -53,12 +53,27 @@ const deletePropertyController=catchAsync(async(req:Request, res:Response, next:
     sendResponse(res, {
         success: true,
         statusCode: StatusCodes.OK,
-        message: "delete controller",
+        message: "Property deleted successfully.",
+        data: result
+    })
+});
+const getRentalRequestsByLandlordController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
+    if(!req.user){
+         throw new AppError("Please login", StatusCodes.UNAUTHORIZED);
+    };
+    const landlordId = req.user.id;
+    const landlordRole = req.user.role;
+    const result = await landlordServices.getRentalRequestsByLandlordServices(landlordId, landlordRole)
+    sendResponse(res, {
+        success:true,
+        statusCode: StatusCodes.OK,
+        message: "Landlord rental requests retrieved successfully.",
         data: result
     })
 })
 export const landlordControllers = {
     creatPropertyController,
     updatePropertyController,
-    deletePropertyController
+    deletePropertyController,
+    getRentalRequestsByLandlordController
 }

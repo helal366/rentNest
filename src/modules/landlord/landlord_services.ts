@@ -222,7 +222,7 @@ const updatePropertyServices = async (
         updateData.isDeleted = false;
       }
     }
-  };
+  }
 
   const updatedProperty = await prisma.property.update({
     where: {
@@ -283,8 +283,48 @@ const deletePropertyServices = async (
   return result;
 };
 
+const getRentalRequestsByLandlordServices = async (
+  landlordId: string,
+  landlordRole: Role,
+) => {
+  if (landlordRole !== Role.LANDLORD) {
+    throw new AppError(
+      "Access denied: Please login as LANDLORD",
+      StatusCodes.FORBIDDEN,
+    );
+  }
+  const rentalRequests = await prisma.rentalRequest.findMany({
+    where: {
+      landlordId,
+    },
+    include: {
+      rentalRequestProperty: {
+        select: {
+          id: true,
+          rentPrice: true,
+          location: true,
+          rentStatus: true,
+          areaInSqFt: true,
+          amenities:true,
+        },
+      },
+      tenant: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return {rentalRequests}
+};
 export const landlordServices = {
   creatPropertyServices,
   updatePropertyServices,
   deletePropertyServices,
+  getRentalRequestsByLandlordServices,
 };

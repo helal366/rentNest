@@ -91,20 +91,46 @@ const getRentalRequestByIdServices=async(payload:IGetRentalRequestByIdPayload)=>
     const rentalRequest = await prisma.rentalRequest.findUniqueOrThrow({
         where: {
             id: rentalRequestId
+        },
+        include: {
+    rentalRequestProperty: {
+        select: {
+            id: true,
+            rentPrice: true,
+            location: true,
+            rentStatus: true
         }
+    },
+    landlord: {
+        select: {
+            id: true,
+            name: true,
+            email: true
+        }
+    },
+    tenant: {
+        select: {
+            id: true,
+            name: true,
+            email: true
+        }
+    }
+}
     });
     if(userRole===Role.TENANT){
         if(userId !== rentalRequest.tenantId){
-            throw new AppError("Tenant is not the submitter of the rental request. ", StatusCodes.BAD_REQUEST)
+            throw new AppError("Access Denied: Tenant is not the submitter of this rental request.", StatusCodes.FORBIDDEN)
         }
     };
     if(userRole===Role.LANDLORD){
         if(userId !== rentalRequest.landlordId){
-            throw new AppError("Landlord is not the owner of the property for which this rental request created",StatusCodes.BAD_REQUEST)
+            throw new AppError("Access Denied: Landlord is not the owner of the property for which this rental request created",StatusCodes.FORBIDDEN)
         }
     };
     return {rentalRequest}
-}
+};
+
+
 export const rentalRequestServices = {
   createRentalRequestServices,
   getRentalRequestsByTenantServices,
