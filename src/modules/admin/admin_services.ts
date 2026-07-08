@@ -15,6 +15,22 @@ const getAllUsersServices=async()=>{
     });
     return users
 };
+
+const getAllPropertiesServices=async()=>{
+    const properties = await prisma.property.findMany({
+        omit:{
+            isDeleted: true,
+            deletedAt: true,
+            createdAt: true,
+            updatedAt: true
+        },
+        orderBy:{
+            rentPrice:"asc"
+        }
+    });
+    return properties
+}
 export const adminServices={
-    getAllUsersServices
+    getAllUsersServices,
+    getAllPropertiesServices
 }

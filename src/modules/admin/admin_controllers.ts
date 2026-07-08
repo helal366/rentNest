@@ -13,6 +13,17 @@ const getAllUsersController=catchAsync(async(req: Request, res: Response, next: 
         data: result
     })
 });
+
+const getAllPropertiesController=catchAsync(async(req: Request, res: Response, next: NextFunction)=>{
+    const result = await adminServices.getAllPropertiesServices();
+    sendResponse(res, {
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: "All properties retrieved successfully.",
+        data: result
+    })
+})
 export const adminControllers={
-    getAllUsersController
+    getAllUsersController,
+    getAllPropertiesController
 }
