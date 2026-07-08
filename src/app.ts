@@ -8,6 +8,7 @@ import { authRouter } from "./modules/auth/auth_routes";
 import { landlordRouter } from "./modules/landlord/landlord_routes";
 import { propertyRouter } from "./modules/property/property_routes";
 import { rentalRouter } from "./modules/rentalRequest/rental_routes";
+import { categoryRouter } from "./modules/category/category_routes";
 
 const app:Application = express();
 app.use(cors({
@@ -24,7 +25,8 @@ app.get("/", (req:Request,res:Response)=>{
 app.use("/api/auth", authRouter);
 app.use("/api/landlord/", landlordRouter);
 app.use("/api/properties", propertyRouter);
-app.use("/api/rentals", rentalRouter)
+app.use("/api/rentals", rentalRouter);
+app.use("/api/categories", categoryRouter)
 app.use(notFound);
 app.use(globalErrorHandler);
 export default app;
