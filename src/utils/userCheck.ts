@@ -13,7 +13,7 @@ export const userCheck=(user:IUser | null | undefined)=>{
     if(!user){
         throw new AppError("User not found", StatusCodes.NOT_FOUND)
     }
-    if(user.userStatus === UserStatus.BAN){
+    if(user.userStatus === UserStatus.BANNED){
         throw new AppError("User is banned.", StatusCodes.FORBIDDEN)
     }
 }

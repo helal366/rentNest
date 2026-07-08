@@ -43,14 +43,7 @@ const getAllRentalRequestsServices=async()=>{
 const updateUserBanUnbanServices=async(userId:string, userStatus: string)=>{
     const validStatus=validateUserStatus(userStatus)
     const user = await prisma.user.findUniqueOrThrow({
-        where:{id:userId},
-        select: {
-            id:true,
-            name: true,
-            email: true,
-            role: true,
-            userStatus: true
-        }
+        where:{id:userId}
     });
     if(user.userStatus === validStatus){
         throw new AppError("Already updated to the required status",StatusCodes.BAD_REQUEST)
@@ -60,6 +53,13 @@ const updateUserBanUnbanServices=async(userId:string, userStatus: string)=>{
         data:{
             userStatus: validStatus
         },
+        select: {
+            id:true,
+            name: true,
+            email: true,
+            role: true,
+            userStatus: true
+        }
     });
     return updatedUser
 }

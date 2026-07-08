@@ -128,7 +128,7 @@ const refreshTokenServices=async(refreshToken:string)=>{
     where:{id},
     omit:{password:true,}
   });
-  if(user.userStatus===UserStatus.BAN){
+  if(user.userStatus===UserStatus.BANNED){
     throw new AppError("This user is banned", StatusCodes.BAD_REQUEST)
   };
   const jwtPayload:JwtPayload={
