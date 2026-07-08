@@ -29,8 +29,14 @@ const getAllPropertiesServices=async()=>{
         }
     });
     return properties
+};
+
+const getAllRentalRequestsServices=async()=>{
+    const rentalRequests = await prisma.rentalRequest.findMany();
+    return rentalRequests
 }
 export const adminServices={
     getAllUsersServices,
-    getAllPropertiesServices
+    getAllPropertiesServices,
+    getAllRentalRequestsServices
 }

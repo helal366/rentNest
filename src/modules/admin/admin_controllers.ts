@@ -22,8 +22,19 @@ const getAllPropertiesController=catchAsync(async(req: Request, res: Response, n
         message: "All properties retrieved successfully.",
         data: result
     })
+});
+
+const getAllRentalRequestsController=catchAsync(async(req: Request, res: Response, next: NextFunction)=>{
+    const result = await adminServices.getAllRentalRequestsServices();
+    sendResponse(res, {
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: "All rental requests retrieved successfully.",
+        data: result
+    })
 })
 export const adminControllers={
     getAllUsersController,
-    getAllPropertiesController
+    getAllPropertiesController,
+    getAllRentalRequestsController
 }
