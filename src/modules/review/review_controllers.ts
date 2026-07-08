@@ -1,9 +1,33 @@
 import { NextFunction, Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
+import { AppError } from "../../utils/globalErrorHelper";
+import { StatusCodes } from "http-status-codes";
+import { reviewServices } from "./review_services";
+import { sendResponse } from "../../utils/sendResponse";
 
-const createReviewController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
+const createReviewController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    if(!req.user){
+        throw new AppError("Please login", StatusCodes.UNAUTHORIZED)
+    }
 
-});
-export const reviewControllers={
-    createReviewController
-}
+    const payload = {
+      tenantId: req.user.id,
+      tenantRole: req.user.role,
+      propertyId: req.body.propertyId,
+      content: req.body.content,
+      rating: req.body.rating,
+    };
+    const result = await reviewServices.createReviewServices(payload);
+
+       sendResponse(res, {
+            success: true,
+            statusCode: StatusCodes.OK,
+            message: "Review created successfully.",
+            data: result
+        })
+  }
+);
+export const reviewControllers = {
+  createReviewController,
+};
