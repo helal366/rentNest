@@ -1,5 +1,5 @@
 import { Prisma } from "../../../generated/prisma/client";
-import { PropertyAmenity, PropertyLocation, RentStatus } from "../../../generated/prisma/enums";
+import { PropertyAmenity, PropertyLocation, RentStatus, Role } from "../../../generated/prisma/enums";
 
 export interface ICreatePropertyPayload{
     category: string,
@@ -45,3 +45,9 @@ export type TPropertyWithRequests = Prisma.PropertyGetPayload<{
     approvedTenant: true;
   };
 }>;
+
+export interface IApproveRejectRentRequestPayload{
+        rentalRequestId: string,
+        landlordId:string,
+        landlordRole: Role
+    }

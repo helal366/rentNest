@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { AppError } from "../../utils/globalErrorHelper";
 import {
   IAdminUpdatePropertyPayload,
+  IApproveRejectRentRequestPayload,
   ICreatePropertyPayload,
   ILandlordUpdatePropertyPayload,
   IUpdatePropertyPayload,
@@ -10,6 +11,7 @@ import { prisma } from "../../lib/prisma";
 import { validateAmenities } from "../../helperFunction/amenitiesValidityCheck";
 import {
   PropertyLocation,
+  PropertyRentRequestStatus,
   RentStatus,
   Role,
 } from "../../../generated/prisma/enums";
@@ -305,7 +307,7 @@ const getRentalRequestsByLandlordServices = async (
           location: true,
           rentStatus: true,
           areaInSqFt: true,
-          amenities:true,
+          amenities: true,
         },
       },
       tenant: {
@@ -320,11 +322,68 @@ const getRentalRequestsByLandlordServices = async (
       createdAt: "desc",
     },
   });
-  return {rentalRequests}
+  return { rentalRequests };
+};
+
+const approveOrRejectRentalRequestServices = async (
+  payload: IApproveRejectRentRequestPayload,
+) => {
+  const { rentalRequestId, landlordId, landlordRole } = payload;
+  if(landlordRole !== Role.LANDLORD){
+    throw new AppError("Unauthorized Access. Please login as LANDLORD", StatusCodes.UNAUTHORIZED)
+  }
+  const rentalRequest = await prisma.rentalRequest.findUniqueOrThrow({
+    where: {
+      id: rentalRequestId,
+    }
+  });
+  if (rentalRequest.landlordId !== landlordId) {
+    throw new AppError(
+      "You are not authorized for this request. Please send the property owner.",
+      StatusCodes.FORBIDDEN,
+    );
+  }
+  const propertyId = rentalRequest.propertyId;
+  await prisma.$transaction(async (tx) => {
+    await tx.rentalRequest.update({
+      where: {
+        id: rentalRequestId,
+      },
+      data: {
+        requestStatus: PropertyRentRequestStatus.APPROVED,
+      },
+    });
+
+    await tx.rentalRequest.updateMany({
+      where: {
+        propertyId,
+        NOT: {
+          id: rentalRequestId,
+        },
+      },
+      data: {
+        requestStatus: PropertyRentRequestStatus.REJECTED,
+      },
+    });
+
+    await tx.property.update({
+      where:{id:propertyId},
+      data:{
+        approvedTenantId: rentalRequest.tenantId,
+        rentStatus: RentStatus.RENTED
+      }
+    })
+
+  });
+
+  return {
+    message: "Rental request approved and others rejected successfully",
+  };
 };
 export const landlordServices = {
   creatPropertyServices,
   updatePropertyServices,
   deletePropertyServices,
   getRentalRequestsByLandlordServices,
+  approveOrRejectRentalRequestServices,
 };

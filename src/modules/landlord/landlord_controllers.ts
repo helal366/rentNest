@@ -10,7 +10,7 @@ const creatPropertyController=catchAsync(async(req:Request, res:Response, next:N
     const payload = req.body as ICreatePropertyPayload;
     const userId = req.user?.id;
     if(!userId){
-        throw new AppError("Please login", StatusCodes.BAD_REQUEST);
+        throw new AppError("Please login", StatusCodes.UNAUTHORIZED);
     }
     const result = await landlordServices.creatPropertyServices(payload, userId)
     sendResponse(res, {
@@ -45,7 +45,7 @@ const deletePropertyController=catchAsync(async(req:Request, res:Response, next:
         throw new AppError("Property id is required.",StatusCodes.BAD_REQUEST)
     }
     if(!req.user){
-        throw new AppError("Please login", StatusCodes.BAD_REQUEST);
+        throw new AppError("Please login", StatusCodes.UNAUTHORIZED);
     };
     const userId= req.user?.id;
     const userRole = req.user?.role;
@@ -70,10 +70,33 @@ const getRentalRequestsByLandlordController=catchAsync(async(req:Request, res:Re
         message: "Landlord rental requests retrieved successfully.",
         data: result
     })
+});
+
+const approveOrRejectRentalRequestController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
+    const rentalRequestId = req.params.id;
+    if(!rentalRequestId || typeof rentalRequestId !=="string"){
+        throw new AppError("Rental request id is required as string.", StatusCodes.BAD_REQUEST)
+    };
+    if(!req.user){
+         throw new AppError("Please login", StatusCodes.UNAUTHORIZED);
+    };
+    const payload={
+        rentalRequestId,
+        landlordId:req.user.id,
+        landlordRole: req.user.role
+    }
+    const result = await landlordServices.approveOrRejectRentalRequestServices(payload)
+    sendResponse(res, {
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: result.message
+
+    })
 })
 export const landlordControllers = {
     creatPropertyController,
     updatePropertyController,
     deletePropertyController,
-    getRentalRequestsByLandlordController
+    getRentalRequestsByLandlordController,
+    approveOrRejectRentalRequestController
 }
