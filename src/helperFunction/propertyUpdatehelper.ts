@@ -1,6 +1,4 @@
 import { StatusCodes } from "http-status-codes";
-import { Prisma } from "../../generated/prisma/client.js";
-import { RentStatus, Role } from "../../generated/prisma/enums.js";
 import {
   IAdminUpdatePropertyPayload,
   ILandlordUpdatePropertyPayload,
@@ -10,11 +8,13 @@ import { AppError } from "../utils/globalErrorHelper.js";
 import { prisma } from "../lib/prisma.js";
 import { validateAmenities } from "./amenitiesValidityCheck.js";
 import { validateLocation } from "./locationValidityCheck.js";
+import { RentStatus, Role } from "#db-client"; 
+import { Prisma } from "#db-client"; 
 
-export const propertyUpdateHelper = async(
+export const propertyUpdateHelper = async (
   userRole: Role,
   payload: ILandlordUpdatePropertyPayload | IAdminUpdatePropertyPayload,
-  property:TPropertyWithRequests
+  property: TPropertyWithRequests,
 ) => {
   const updateData: Prisma.PropertyUncheckedUpdateInput = {};
   if (userRole === Role.LANDLORD) {
@@ -28,20 +28,23 @@ export const propertyUpdateHelper = async(
   const hasRentalRequest = property.propertyRentRequests.length > 0;
   const hasTenant = !!property.approvedTenantId;
   const notAvailable = property.rentStatus !== RentStatus.AVAILABLE;
-  if("category" in payload &&  payload.category){
-      if(hasRentalRequest || hasTenant || notAvailable){
-        throw new AppError("Can not change category after rental activity.",StatusCodes.BAD_REQUEST)
-      };
-      const category = await prisma.category.findUnique({
-        where: {
-            name: payload.category
-        }
-      });
-      if(!category){
-        throw new AppError("Category not found",StatusCodes.BAD_REQUEST)
-      };
-      updateData.propertyCategoryId = category.id;
-  };
+  if ("category" in payload && payload.category) {
+    if (hasRentalRequest || hasTenant || notAvailable) {
+      throw new AppError(
+        "Can not change category after rental activity.",
+        StatusCodes.BAD_REQUEST,
+      );
+    }
+    const category = await prisma.category.findUnique({
+      where: {
+        name: payload.category,
+      },
+    });
+    if (!category) {
+      throw new AppError("Category not found", StatusCodes.BAD_REQUEST);
+    }
+    updateData.propertyCategoryId = category.id;
+  }
 
   if ("rentPrice" in payload && payload.rentPrice !== undefined) {
     if (
@@ -58,20 +61,20 @@ export const propertyUpdateHelper = async(
   }
 
   if ("amenities" in payload && payload.amenities) {
-      if (!Array.isArray(payload.amenities)) {
-        throw new AppError(
-          "Amenities must be an array.",
-          StatusCodes.BAD_REQUEST,
-        );
-      }
-      validateAmenities(payload.amenities);
-      updateData.amenities = payload.amenities;
+    if (!Array.isArray(payload.amenities)) {
+      throw new AppError(
+        "Amenities must be an array.",
+        StatusCodes.BAD_REQUEST,
+      );
     }
-    if ("location" in payload && payload.location) {
-      validateLocation(payload.location);
-      updateData.location = payload.location;
-    }
-    if ("areaInSqFt" in payload && payload.areaInSqFt) {
+    validateAmenities(payload.amenities);
+    updateData.amenities = payload.amenities;
+  }
+  if ("location" in payload && payload.location) {
+    validateLocation(payload.location);
+    updateData.location = payload.location;
+  }
+  if ("areaInSqFt" in payload && payload.areaInSqFt) {
     if (typeof payload.areaInSqFt !== "number" || payload.areaInSqFt <= 0) {
       throw new AppError(
         "Area must be a positive number.",
@@ -111,7 +114,7 @@ export const propertyUpdateHelper = async(
     }
     updateData.rentStatus = payload.rentStatus;
   }
-   if (userRole === Role.ADMIN) {
+  if (userRole === Role.ADMIN) {
     if ("landlordId" in payload && payload.landlordId) {
       const landlord = await prisma.user.findUniqueOrThrow({
         where: {
@@ -136,5 +139,5 @@ export const propertyUpdateHelper = async(
       }
     }
   }
-  return updateData
+  return updateData;
 };

@@ -25,14 +25,3 @@ if (envVars.NODE_ENV !== "production") {
 
 export default app;
 
-// if (process.env.NODE_ENV !== "production") {
-//   try {
-//     app.listen(PORT, () => {
-//       console.log(`Server running on port ${PORT}`);
-//     });
-//   } catch (error) {
-//     console.error("Error starting server:", error);
-//     prisma.$disconnect();
-//     process.exit(1);
-//   }
-// }

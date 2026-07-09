@@ -4,7 +4,7 @@ import { propertyServices } from "./property_services.js";
 import { sendResponse } from "../../utils/sendResponse.js";
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "../../utils/globalErrorHelper.js";
-import { PropertyLocation } from "../../../generated/prisma/enums.js";
+import { PropertyLocation } from "#db-client"; 
 
 const getAllPropertiesController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {

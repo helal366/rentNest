@@ -8,14 +8,9 @@ import {
 } from "./landlord_interfaces.js";
 import { prisma } from "../../lib/prisma.js";
 import { validateAmenities } from "../../helperFunction/amenitiesValidityCheck.js";
-import {
-  PropertyLocation,
-  PropertyRentRequestStatus,
-  RentStatus,
-  Role,
-} from "../../../generated/prisma/enums.js";
 import { validateLocation } from "../../helperFunction/locationValidityCheck.js";
-import { Prisma } from "../../../generated/prisma/client.js";
+import { PropertyLocation, PropertyRentRequestStatus, RentStatus, Role } from "#db-client"; 
+import { Prisma } from "#db-client"; 
 
 const creatPropertyServices = async (
   payload: ICreatePropertyPayload,

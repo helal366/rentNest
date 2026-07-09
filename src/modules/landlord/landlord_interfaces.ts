@@ -1,10 +1,6 @@
-import { Prisma } from "../../../generated/prisma/client.js";
-import {
-  PropertyAmenity,
-  PropertyLocation,
-  RentStatus,
-  Role,
-} from "../../../generated/prisma/enums.js";
+import { Prisma } from "#db-client"; 
+import { PropertyAmenity, PropertyLocation, RentStatus, Role } from "#db-client"; 
+
 
 export interface ICreatePropertyPayload {
   category: string;
@@ -43,7 +39,7 @@ export interface IUpdatePropertyPayload {
   propertyCategoryId?: string;
 }
 
-// import { Prisma } from "@prisma/client";
+// import { Prisma } from "../../../prisma/generated/index.js";
 export type TPropertyWithRequests = Prisma.PropertyGetPayload<{
   include: {
     propertyRentRequests: true;

@@ -1,12 +1,7 @@
 import { StatusCodes } from "http-status-codes";
-import { PropertyLocation } from "../../generated/prisma/enums.js";
 import { AppError } from "../utils/globalErrorHelper.js";
-
+import { PropertyLocation } from "#db-client"; 
 export const validateLocation = (location: string): PropertyLocation => {
-  // ✅ If not provided → use default
-  // if (!location || location?.trim() === "") {
-  //   return PropertyLocation.JATRABARI;
-  // }
 
   const normalizedLocation = location.toUpperCase();
 

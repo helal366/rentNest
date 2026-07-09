@@ -2,13 +2,19 @@
   "name": "rentNest",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
+  "main": "dist/server.js",
+  "imports": {
+    "#db-client": {
+      "default": "./dist/generated/client/client.js"
+    }
+  },
+   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
-    "deploy": "pnpm build && vercel --prod",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": "prisma generate",
+    "vercel-build": "prisma generate && prisma migrate deploy && tsc",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +30,7 @@
     "@types/node": "^26.1.0",
     "@types/pg": "^8.20.0",
     "prisma": "^7.8.0",
+    "shx": "^0.4.0",
     "tsx": "^4.23.0",
     "typescript": "^6.0.3"
   },

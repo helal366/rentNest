@@ -1,4 +1,5 @@
-import { Role, UserStatus } from "../../../generated/prisma/enums.js";
+import { Role, UserStatus } from "#db-client"; 
+
 
 export interface IRegisterUser {
   name: string;

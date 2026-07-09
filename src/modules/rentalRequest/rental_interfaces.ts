@@ -1,4 +1,5 @@
-import { Role } from "../../../generated/prisma/enums.js";
+import { Role } from "#db-client"; 
+
 
 export interface ICreateRentalRequestPayload {
   tenantId: string;

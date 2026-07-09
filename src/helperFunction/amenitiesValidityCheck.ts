@@ -1,6 +1,7 @@
 import { StatusCodes } from "http-status-codes";
-import { PropertyAmenity } from "../../generated/prisma/enums.js";
 import { AppError } from "../utils/globalErrorHelper.js";
+// ✨ Enums are cleanly exported straight through the main client alias file!
+import { PropertyAmenity } from "#db-client"; 
 
 export const validateAmenities = (amenities: string[]) => {
   const validAmenities = Object.values(PropertyAmenity);

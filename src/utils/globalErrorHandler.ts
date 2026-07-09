@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "./globalErrorHelper.js";
-import type { Prisma } from "@prisma/client";
 import { envVars } from "../config/index.js";
 
 export const globalErrorHandler = (
@@ -15,35 +14,33 @@ export const globalErrorHandler = (
   let details: any = null;
 
   const errorObj = error instanceof Error ? error : new Error("Unknown error");
-  const isPrismaKnownError = (error: unknown): error is {
-  code: string;
-  meta?: Record<string, unknown>;
-} => {
-  return (
-    typeof error === "object" &&
-    error !== null &&
-    "code" in error
-  );
-};
+  const isPrismaKnownError = (
+    error: unknown,
+  ): error is {
+    code: string;
+    meta?: Record<string, unknown>;
+  } => {
+    return typeof error === "object" && error !== null && "code" in error;
+  };
 
-const isPrismaValidationError = (error: unknown): boolean => {
-  return (
-    typeof error === "object" &&
-    error !== null &&
-    error.constructor?.name === "PrismaClientValidationError"
-  );
-};
+  const isPrismaValidationError = (error: unknown): boolean => {
+    return (
+      typeof error === "object" &&
+      error !== null &&
+      error.constructor?.name === "PrismaClientValidationError"
+    );
+  };
 
   // ✅ Handle AppError FIRST
   if (error instanceof AppError) {
     statusCode = error.statusCode;
     message = error.message;
   }
- // ✅ Known request error
-else if (isPrismaValidationError(error)) {
-  statusCode = StatusCodes.BAD_REQUEST;
-  message = "Missing or invalid fields.";
-}
+  // ✅ Known request error
+  else if (isPrismaValidationError(error)) {
+    statusCode = StatusCodes.BAD_REQUEST;
+    message = "Missing or invalid fields.";
+  }
   // ✅ Prisma Errors
   else if (isPrismaKnownError(error)) {
     statusCode = StatusCodes.BAD_REQUEST;

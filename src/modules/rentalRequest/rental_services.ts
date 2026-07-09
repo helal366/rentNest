@@ -1,11 +1,8 @@
 import { StatusCodes } from "http-status-codes";
 import { prisma } from "../../lib/prisma.js";
 import { AppError } from "../../utils/globalErrorHelper.js";
-import { Role } from "../../../generated/prisma/enums.js";
-import {
-  ICreateRentalRequestPayload,
-  IGetRentalRequestByIdPayload,
-} from "./rental_interfaces.js";
+import { ICreateRentalRequestPayload, IGetRentalRequestByIdPayload } from "./rental_interfaces.js";
+import { Role } from "#db-client"; 
 
 const createRentalRequestServices = async (
   payload: ICreateRentalRequestPayload,

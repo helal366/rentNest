@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "./globalErrorHelper.js";
-import { Role, UserStatus } from "../../generated/prisma/enums.js";
+import { Role, UserStatus } from "#db-client"; 
 
 interface IUser {
   id: string;

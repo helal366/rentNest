@@ -22,35 +22,61 @@ pnpm approve-builds
 pnpm add @prisma/client @prisma/adapter-pg pg dotenv
 ```
 
-- package.json add
+#### package.json add:
+```
   "type":"module",
-- package.json into script add
-  "dev": "tsx watch src/server.ts",
-  "build": "tsc",
-  "start": "node dist/server.js",
-
-- replace tsconfig.ts with the following code:
-  {
-  "compilerOptions": {
-  "outDir": "./dist",
-  "module": "ESNext",
-  "moduleResolution": "bundler",
-  "target": "ES2023",
-  "types": ["node"],
-  "sourceMap": true,
-  "declaration": true,
-  "declarationMap": true,
-  "noUncheckedIndexedAccess": true,
-  "strict": true,
-  "isolatedModules": true,
-  "noUncheckedSideEffectImports": true,
-  "moduleDetection": "force",
-  "skipLibCheck": true
+```
+* package.json scripts part:
+```
+"scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "postinstall": "prisma generate",
+    "vercel-build": "prisma generate && prisma migrate deploy && tsc",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio"
   },
-  // "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
-  }
+```
+* before scripts into package.json:
+```
+"main": "dist/server.js",
+  "imports": {
+    "#db-client": {
+      "default": "./dist/generated/client/client.js"
+    }
+  },
+```
 
+#### tsconfig.json
+- replace tsconfig.json with the following code:
+```
+{
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2023",
+    "types": ["node", "express", "cookie-parser", "cors", "jsonwebtoken"],
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "noUncheckedIndexedAccess": true,
+    "strict": true,
+    "isolatedModules": true,
+    "noUncheckedSideEffectImports": true,
+    "moduleDetection": "force",
+    "skipLibCheck": true,
+    "paths": {
+      "#db-client": ["./generated/client/client.ts"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "prisma/generated", "prisma.config.ts"]
+}
+```
+
+#### prisma 
 - then the following commands:
 
 ```
@@ -59,15 +85,17 @@ pnpm approve-builds
 pnpm dlx prisma init --output ../generated/prisma
 ```
 
+#### package installation with type dependencies:
 - now install express, bcryptjs, cors, cookie parser, http status code, jwt and their type dependencies
   bcryptjs has its own type installation with it. so bcryptjs has no need to install it's type
-
 ```
-pnpm add express bcryptjs cors cookie-parser http-status-codes jsonwebtoken ms
-pnpm add -D @types/express @types/cors @types/cookie-parser @types/jsonwebtoken
+pnpm add express bcryptjs cors cookie-parser http-status-codes jsonwebtoken ms 
+pnpm add -D shx @types/express @types/cors @types/cookie-parser @types/jsonwebtoken
 ```
 
-- src and dist folder at the root directory
+- create src and dist folder at the root directory
+
+#### config folder and index.ts file:
 - config/index.ts setup: create a config folder into src folder and a index.ts file into config folder.
 
 ```
@@ -106,36 +134,34 @@ const loadEnvVariables=():EnvVariables=> {
 export const envVars = loadEnvVariables();
 ```
 
-- generate prisma
-
+#### generate prisma
 ```
- npx prisma generate
+ pnpm postinstall
 ```
 
-- prisma connection
+#### prisma.ts, db connection:
 
 * create a folder named "lib" into src. then create a file named prisma.ts
 * into the prisma.ts file add the following code:
 
 ```
 import "dotenv/config";
+import pg from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../../generated/prisma/client";
+import { PrismaClient } from "#db-client"; // Automatically maps to client.ts / client.js
 
-const connectionString = `${process.env.DATABASE_URL}`;
+const { Pool } = pg;
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
 
-const adapter = new PrismaPg({ connectionString });
-const prisma = new PrismaClient({ adapter });
-
-export { prisma };
+export const prisma = new PrismaClient({ adapter });
 ```
 
 - create your own database add DATABASE_URL at .env
 
-- express setup
 
+#### express setup
 * app.ts
-
 ```
 import cookieParser from "cookie-parser";
 import express, { Application, Request, Response } from "express";
@@ -156,27 +182,35 @@ app.get("/", (req:Request,res:Response)=>{
 export default app;
 ```
 
-- server.ts
+#### server.ts
 
 ```
-import app from "./app";
+import app from "./app.js";
+import { envVars } from "./config/index.js";
 import { prisma } from "./lib/prisma.js";
 
-const PORT = process.env.PORT || 5000;
-async function main(){
-    try{
-        await prisma.$connect();
-        console.log("Connected to the database successfully.");
-        app.listen(PORT, ()=>{
-            console.log(`Server is running on port ${PORT}`);
-        });
-    }catch(error){
-        console.error("Error starting server:", error);
-        prisma.$disconnect();
-        process.exit(1);
-    }
+async function connectDB() {
+  try {
+    await prisma.$connect();
+    console.log("Connected to the database successfully.");
+  } catch (error) {
+    console.error("Error starting server:", error);
+  }
 }
-main();
+connectDB();
+
+if (envVars.NODE_ENV !== "production") {
+  const PORT = envVars.PORT || 5000;
+  const server = app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+
+  server.on("error", (err) => {
+    console.error("Server failed to start:", err);
+  });
+}
+
+export default app;
 ```
 
 ### stripe payment
@@ -214,14 +248,14 @@ Now create product
   "version": 2,
   "builds": [
     {
-      "src": "dist/src/server.js",
+      "src": "src/server.ts",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "dist/src/server.js"
+      "dest": "src/server.ts"
     }
   ]
 }
@@ -233,7 +267,7 @@ Now create product
 pnpm build
 ```
 
-- globally install vercel:
+- globally install vercel: (alrready done, do not need for next projects)
 
 ```
 pnpm add -g vercel
@@ -262,6 +296,8 @@ step by step answer the appeared questions
 
 - now go to vercel and add the env variables.
 
+
+#### pnpm-workspace.yaml
 * go to pnpm-workspace.yaml file and replace everything with the following code:
 
 ```
@@ -274,32 +310,13 @@ allowBuilds:
   prisma: true
 ```
 
-- now go to server.ts and replace the code with the following:
 
+### vercel rebind
 ```
-import app from "./app.js";
-import { envVars } from "./config/index.js";
-import { prisma } from "./lib/prisma.js";
+vercel login
+vercel link
+vercel env pull .env.production.local
+export ENABLE_EXPERIMENTAL_COREPACK=1
+vercel --prod --force
 
-const PORT = envVars.PORT || 5000;
-async function connectDB() {
-  try {
-    await prisma.$connect();
-    console.log("Connected to the database successfully.");
-  } catch (error) {
-    console.error("Error starting server:", error);
-  }
-}
-connectDB();
-
-if (process.env.NODE_ENV !== "production") {
-  const server = app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-
-  server.on("error", (err) => {
-    console.error("Server failed to start:", err);
-  });
-}
-export default app;
 ```

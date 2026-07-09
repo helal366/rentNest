@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
-import { UserStatus } from "../../generated/prisma/enums.js";
 import { AppError } from "../utils/globalErrorHelper.js";
+import { UserStatus } from "#db-client"; 
 
 export const validateUserStatus = (userStatus: string): UserStatus => {
   const normalizedUserStatus = userStatus.toUpperCase();

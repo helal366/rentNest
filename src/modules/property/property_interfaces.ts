@@ -1,4 +1,5 @@
-import { PropertyAmenity, PropertyLocation, RentStatus } from "@prisma/client";
+import { PropertyAmenity, PropertyLocation, RentStatus } from "#db-client"; 
+
 
 export interface IProperty {
   id: string;

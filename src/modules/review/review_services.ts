@@ -1,11 +1,8 @@
 import { StatusCodes } from "http-status-codes";
-import {
-  PropertyRentRequestStatus,
-  Role,
-} from "../../../generated/prisma/enums.js";
 import { AppError } from "../../utils/globalErrorHelper.js";
 import { prisma } from "../../lib/prisma.js";
 import { ICreateReviewPayload } from "./review_interfaces.js";
+import { PropertyRentRequestStatus, Role } from "#db-client"; 
 
 const createReviewServices = async (payload: ICreateReviewPayload) => {
   const { tenantId, tenantRole, propertyId, content, rating } = payload;
