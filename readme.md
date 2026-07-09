@@ -212,7 +212,7 @@ Now create product
   "version": 2,
   "builds": [
     {
-      "src": "dist/server.js",
+      "src": "dist/src/server.js",
       "use": "@vercel/node"
     }
   ],
