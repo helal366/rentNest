@@ -5,10 +5,20 @@ model Payment{
     rentalRequestId String @unique
     rentalRequest RentalRequest @relation(name: "PaymentToRentalRequest", fields: [rentalRequestId], references: [id], onDelete:Cascade)
 
-    amount Int 
+    tenantId String
+    tenant User @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+    amount Int
+
+    paymentStatus PaymentStatus
+    // stripe related infos
+    stripeCustomerId String @unique // stripe customer id 
+    stripeSubscriptionId String @unique  // stripe subscription id
+
     method PaymentMethod @default(CARD)
     provider PaymentProvider @default(STRIPE)
     paidAt DateTime @default(now())
 
+    @@index([tenantId])
     @@map("payments")
 }

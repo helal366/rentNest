@@ -8,6 +8,8 @@ model User{
 
     tenantReviews Review[]
 
+    payments Payment[]
+
     tenantRentalRequests RentalRequest[] @relation("TenantRentalRequests")
     approvedRentalProperties Property[] @relation("ApprovedRentalProperties")
 

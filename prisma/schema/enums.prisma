@@ -68,3 +68,9 @@ enum PropertyLocation{
     JIGATOLA
     FARMGATE
 }
+
+enum PaymentStatus{
+    PENDING
+    COMPLETED
+    FAILED
+}
