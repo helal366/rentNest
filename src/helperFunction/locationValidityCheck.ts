@@ -1,7 +1,7 @@
 
 import { StatusCodes } from "http-status-codes";
 import { PropertyLocation } from "../../generated/prisma/enums";
-import { AppError } from "../utils/globalErrorHelper";
+import { AppError } from "../utils/globalErrorHelper.js";
 
 export const validateLocation = (location: string): PropertyLocation => {
   // ✅ If not provided → use default

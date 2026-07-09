@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { catchAsync } from "../../utils/catchAsync";
-import { sendResponse } from "../../utils/sendResponse";
+import { catchAsync } from "../../utils/catchAsync.js";
+import { sendResponse } from "../../utils/sendResponse.js";
 import { StatusCodes } from "http-status-codes";
-import { authServices } from "./auth_services";
-import { setAuthTokensInCookies } from "../../utils/setAuthTokensInCookies";
-import { AppError } from "../../utils/globalErrorHelper";
+import { authServices } from "./auth_services.js";
+import { setAuthTokensInCookies } from "../../utils/setAuthTokensInCookies.js";
+import { AppError } from "../../utils/globalErrorHelper.js";
 
 const authRegisterController = catchAsync(async(req:Request, res:Response)=>{
     const payload = req.body;

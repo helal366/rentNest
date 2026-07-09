@@ -1,6 +1,6 @@
 import app from "./app.js";
 import { envVars } from "./config/index.js";
-import { prisma } from "./lib/prisma";
+import { prisma } from "./lib/prisma.js";
 
 async function connectDB() {
   try {

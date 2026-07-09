@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { landlordControllers } from "./landlord_controllers";
-import { userAuth } from "../../middlewares/userAuth";
+import { landlordControllers } from "./landlord_controllers.js";
+import { userAuth } from "../../middlewares/userAuth.js";
 import { Role } from "../../../generated/prisma/enums";
 
 export const landlordRouter:Router=Router();

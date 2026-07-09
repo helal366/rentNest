@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { userAuth } from "../../middlewares/userAuth";
+import { userAuth } from "../../middlewares/userAuth.js";
 import { Role } from "../../../generated/prisma/enums";
-import { rentalRequestControllers } from "./rental_controllers";
+import { rentalRequestControllers } from "./rental_controllers.js";
 
 export const rentalRouter:Router = Router();
 rentalRouter.post("/", userAuth(Role.TENANT), rentalRequestControllers.createRentalRequestController);

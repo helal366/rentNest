@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes"
-import { AppError } from "./globalErrorHelper"
+import { AppError } from "./globalErrorHelper.js"
 import { Role, UserStatus } from "../../generated/prisma/enums"
 
 interface IUser {

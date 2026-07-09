@@ -1,8 +1,8 @@
 import { StatusCodes } from "http-status-codes";
 import { PropertyRentRequestStatus, Role } from "../../../generated/prisma/enums";
-import { AppError } from "../../utils/globalErrorHelper";
-import { prisma } from "../../lib/prisma";
-import { ICreateReviewPayload } from "./review_interfaces";
+import { AppError } from "../../utils/globalErrorHelper.js";
+import { prisma } from "../../lib/prisma.js";
+import { ICreateReviewPayload } from "./review_interfaces.js";
 
 const createReviewServices = async (
   payload: ICreateReviewPayload

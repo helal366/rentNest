@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { Prisma } from "../../generated/prisma/client";
-import { envVars } from "../config";
-import { AppError } from "./globalErrorHelper";
+import { Prisma } from "../../generated/prisma/client.js";
+import { envVars } from "../config/index.js";
+import { AppError } from "./globalErrorHelper.js";
 
 export const globalErrorHandler = (
   error: unknown,

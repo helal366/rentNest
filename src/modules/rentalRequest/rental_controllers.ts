@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { catchAsync } from "../../utils/catchAsync";
-import { AppError } from "../../utils/globalErrorHelper";
+import { catchAsync } from "../../utils/catchAsync.js";
+import { AppError } from "../../utils/globalErrorHelper.js";
 import { StatusCodes } from "http-status-codes";
-import { rentalRequestServices } from "./rental_services";
-import { sendResponse } from "../../utils/sendResponse";
+import { rentalRequestServices } from "./rental_services.js";
+import { sendResponse } from "../../utils/sendResponse.js";
 
 const createRentalRequestController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
     const {propertyId, landlordId} = req.body;

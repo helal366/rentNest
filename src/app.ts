@@ -2,16 +2,16 @@ import cookieParser from "cookie-parser";
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import { envVars } from "./config/index.js";
-import { notFound } from "./middlewares/notFound";
-import { globalErrorHandler } from "./utils/globalErrorHandler";
-import { authRouter } from "./modules/auth/auth_routes";
-import { landlordRouter } from "./modules/landlord/landlord_routes";
-import { propertyRouter } from "./modules/property/property_routes";
-import { rentalRouter } from "./modules/rentalRequest/rental_routes";
-import { categoryRouter } from "./modules/category/category_routes";
-import { adminRouter } from "./modules/admin/admin_routes";
-import { reviewRouter } from "./modules/review/review_routes";
-import { paymentRouter } from "./modules/payment/payment_routes";
+import { notFound } from "./middlewares/notFound.js";
+import { globalErrorHandler } from "./utils/globalErrorHandler.js";
+import { authRouter } from "./modules/auth/auth_routes.js";
+import { landlordRouter } from "./modules/landlord/landlord_routes.js";
+import { propertyRouter } from "./modules/property/property_routes.js";
+import { rentalRouter } from "./modules/rentalRequest/rental_routes.js";
+import { categoryRouter } from "./modules/category/category_routes.js";
+import { adminRouter } from "./modules/admin/admin_routes.js";
+import { reviewRouter } from "./modules/review/review_routes.js";
+import { paymentRouter } from "./modules/payment/payment_routes.js";
 
 const app: Application = express();
 app.use(

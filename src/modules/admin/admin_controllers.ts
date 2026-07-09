@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { catchAsync } from "../../utils/catchAsync";
-import { adminServices } from "./admin_services";
-import { sendResponse } from "../../utils/sendResponse";
+import { catchAsync } from "../../utils/catchAsync.js";
+import { adminServices } from "./admin_services.js";
+import { sendResponse } from "../../utils/sendResponse.js";
 import { StatusCodes } from "http-status-codes";
-import { AppError } from "../../utils/globalErrorHelper";
+import { AppError } from "../../utils/globalErrorHelper.js";
 
 const getAllUsersController=catchAsync(async(req: Request, res: Response, next: NextFunction)=>{
     const result = await adminServices.getAllUsersServices();

@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { catchAsync } from "../../utils/catchAsync";
-import { sendResponse } from "../../utils/sendResponse";
+import { catchAsync } from "../../utils/catchAsync.js";
+import { sendResponse } from "../../utils/sendResponse.js";
 import { StatusCodes } from "http-status-codes";
-import { AppError } from "../../utils/globalErrorHelper";
-import { landlordServices } from "./landlord_services";
-import { ICreatePropertyPayload } from "./landlord_interfaces";
+import { AppError } from "../../utils/globalErrorHelper.js";
+import { landlordServices } from "./landlord_services.js";
+import { ICreatePropertyPayload } from "./landlord_interfaces.js";
 
 const creatPropertyController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
     const payload = req.body as ICreatePropertyPayload;

@@ -1,7 +1,7 @@
 
 import { StatusCodes } from "http-status-codes";
 import { UserStatus } from "../../generated/prisma/enums";
-import { AppError } from "../utils/globalErrorHelper";
+import { AppError } from "../utils/globalErrorHelper.js";
 
 export const validateUserStatus = (userStatus: string): UserStatus => {
 

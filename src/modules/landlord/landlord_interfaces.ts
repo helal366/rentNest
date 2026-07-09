@@ -1,4 +1,4 @@
-import { Prisma } from "../../../generated/prisma/client";
+import { Prisma } from "../../../generated/prisma/client.js";
 import { PropertyAmenity, PropertyLocation, RentStatus, Role } from "../../../generated/prisma/enums";
 
 export interface ICreatePropertyPayload{

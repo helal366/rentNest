@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
-import { catchAsync } from "../utils/catchAsync";
-import { envVars } from "../config";
-import { Role, UserStatus } from "../../generated/prisma/client";
+import { catchAsync } from "../utils/catchAsync.js";
+import { envVars } from "../config/index.js";
+import { Role, UserStatus } from "../../generated/prisma/client.js";
 import { StatusCodes } from "http-status-codes";
-import { sendResponse } from "../utils/sendResponse";
-import { prisma } from "../lib/prisma";
-import { userCheck } from "../utils/userCheck";
-import { jwtTokens } from "../utils/jwtTokens";
+import { sendResponse } from "../utils/sendResponse.js";
+import { prisma } from "../lib/prisma.js";
+import { userCheck } from "../utils/userCheck.js";
+import { jwtTokens } from "../utils/jwtTokens.js";
 
 declare global {
   namespace Express {

@@ -1,23 +1,21 @@
 import { StatusCodes } from "http-status-codes";
-import { AppError } from "../../utils/globalErrorHelper";
+import { AppError } from "../../utils/globalErrorHelper.js";
 import {
   IAdminUpdatePropertyPayload,
   IApproveRejectRentRequestPayload,
   ICreatePropertyPayload,
   ILandlordUpdatePropertyPayload,
-  IUpdatePropertyPayload,
-} from "./landlord_interfaces";
-import { prisma } from "../../lib/prisma";
-import { validateAmenities } from "../../helperFunction/amenitiesValidityCheck";
+} from "./landlord_interfaces.js";
+import { prisma } from "../../lib/prisma.js";
+import { validateAmenities } from "../../helperFunction/amenitiesValidityCheck.js";
 import {
   PropertyLocation,
   PropertyRentRequestStatus,
   RentStatus,
   Role,
 } from "../../../generated/prisma/enums";
-import { validateLocation } from "../../helperFunction/locationValidityCheck";
-import { Prisma } from "../../../generated/prisma/client";
-import { propertyUpdateHelper } from "../../helperFunction/propertyUpdatehelper";
+import { validateLocation } from "../../helperFunction/locationValidityCheck.js";
+import { Prisma } from "../../../generated/prisma/client.js";
 
 const creatPropertyServices = async (
   payload: ICreatePropertyPayload,

@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { catchAsync } from "../../utils/catchAsync";
-import { AppError } from "../../utils/globalErrorHelper";
+import { catchAsync } from "../../utils/catchAsync.js";
+import { AppError } from "../../utils/globalErrorHelper.js";
 import { StatusCodes } from "http-status-codes";
-import { reviewServices } from "./review_services";
-import { sendResponse } from "../../utils/sendResponse";
+import { reviewServices } from "./review_services.js";
+import { sendResponse } from "../../utils/sendResponse.js";
 
 const createReviewController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {

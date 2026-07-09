@@ -1,7 +1,7 @@
 
 import { StatusCodes } from "http-status-codes";
 import { PropertyAmenity } from "../../generated/prisma/enums";
-import { AppError } from "../utils/globalErrorHelper";
+import { AppError } from "../utils/globalErrorHelper.js";
 
 export const validateAmenities = (amenities: string[]) => {
   const validAmenities = Object.values(PropertyAmenity);

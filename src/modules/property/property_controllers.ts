@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { catchAsync } from "../../utils/catchAsync";
-import { propertyServices } from "./property_services";
-import { sendResponse } from "../../utils/sendResponse";
+import { catchAsync } from "../../utils/catchAsync.js";
+import { propertyServices } from "./property_services.js";
+import { sendResponse } from "../../utils/sendResponse.js";
 import { StatusCodes } from "http-status-codes";
-import { AppError } from "../../utils/globalErrorHelper";
+import { AppError } from "../../utils/globalErrorHelper.js";
 import { PropertyLocation } from "../../../generated/prisma/enums";
 
 const getAllPropertiesController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{

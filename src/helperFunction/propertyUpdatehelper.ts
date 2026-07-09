@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { Prisma, RentStatus, Role } from "../../generated/prisma/client";
+import { Prisma, RentStatus, Role } from "../../generated/prisma/client.js";
 import {
   IAdminUpdatePropertyPayload,
   ILandlordUpdatePropertyPayload,

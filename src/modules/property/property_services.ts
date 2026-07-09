@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { PropertyLocation } from "../../../generated/prisma/enums";
-import { prisma } from "../../lib/prisma";
-import { AppError } from "../../utils/globalErrorHelper";
+import { prisma } from "../../lib/prisma.js";
+import { AppError } from "../../utils/globalErrorHelper.js";
 
 type TPropertyFilters = {
   location?: PropertyLocation;

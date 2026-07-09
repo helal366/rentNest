@@ -1,13 +1,13 @@
 import { StatusCodes } from "http-status-codes";
-import { AppError } from "../../utils/globalErrorHelper";
-import { ILoginUser, IRegisterUser } from "./auth_interfaces";
+import { AppError } from "../../utils/globalErrorHelper.js";
+import { ILoginUser, IRegisterUser } from "./auth_interfaces.js";
 import { Role, UserStatus } from "../../../generated/prisma/enums";
-import { prisma } from "../../lib/prisma";
+import { prisma } from "../../lib/prisma.js";
 import bcrypt from "bcryptjs";
-import { envVars } from "../../config";
-import { userCheck } from "../../utils/userCheck";
+import { envVars } from "../../config/index.js";
+import { userCheck } from "../../utils/userCheck.js";
 import { JwtPayload, SignOptions } from "jsonwebtoken";
-import { jwtTokens } from "../../utils/jwtTokens";
+import { jwtTokens } from "../../utils/jwtTokens.js";
 
 const authRegisterServices = async (payload: IRegisterUser) => {
   const { name, email, role, password } = payload;
