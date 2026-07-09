@@ -219,7 +219,7 @@ Now create product
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "dist/server.js"
+      "dest": "dist/src/server.js"
     }
   ]
 }
@@ -259,3 +259,14 @@ step by step answer the appeared questions
 ```
 
 - now go to vercel and add the env variables.
+
+* go to pnpm-workspace.yaml file and replace everything with the following code:
+```
+packages:
+  - .
+
+allowBuilds:
+  '@prisma/engines': true
+  esbuild: true
+  prisma: true
+```
