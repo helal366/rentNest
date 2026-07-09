@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { Prisma } from "../../generated/prisma/client.js";
-import { envVars } from "../config/index.js";
 import { AppError } from "./globalErrorHelper.js";
+import type { Prisma } from "@prisma/client";
+import { envVars } from "../config/index.js";
 
 export const globalErrorHandler = (
   error: unknown,
@@ -14,17 +14,41 @@ export const globalErrorHandler = (
   let message = "Something went wrong";
   let details: any = null;
 
+  const errorObj = error instanceof Error ? error : new Error("Unknown error");
+  const isPrismaKnownError = (error: unknown): error is {
+  code: string;
+  meta?: Record<string, unknown>;
+} => {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error
+  );
+};
+
+const isPrismaValidationError = (error: unknown): boolean => {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    error.constructor?.name === "PrismaClientValidationError"
+  );
+};
+
   // ✅ Handle AppError FIRST
   if (error instanceof AppError) {
     statusCode = error.statusCode;
     message = error.message;
   }
-
+ // ✅ Known request error
+else if (isPrismaValidationError(error)) {
+  statusCode = StatusCodes.BAD_REQUEST;
+  message = "Missing or invalid fields.";
+}
   // ✅ Prisma Errors
-  else if (error instanceof Prisma.PrismaClientValidationError) {
+  else if (isPrismaKnownError(error)) {
     statusCode = StatusCodes.BAD_REQUEST;
     message = "Missing or invalid fields.";
-  } else if (error instanceof Prisma.PrismaClientKnownRequestError) {
+  } else if (isPrismaKnownError(error)) {
     statusCode = StatusCodes.BAD_REQUEST;
 
     switch (error.code) {
@@ -47,10 +71,10 @@ export const globalErrorHandler = (
     }
 
     details = error.meta;
-  } else if (error instanceof Prisma.PrismaClientInitializationError) {
+  } else if (isPrismaKnownError(error)) {
     statusCode = StatusCodes.SERVICE_UNAVAILABLE;
     message = "Database connection failed.";
-  } else if (error instanceof Prisma.PrismaClientUnknownRequestError) {
+  } else if (isPrismaKnownError(error)) {
     message = "Unexpected database error.";
   }
 
@@ -60,24 +84,23 @@ export const globalErrorHandler = (
     message = "Invalid JSON format.";
   }
 
-  // ✅ Unknown error fallback
+  // ✅ Generic Error
   else if (error instanceof Error) {
     message = error.message;
   }
 
-  // 🔥 DEV vs PROD response
+  // 🔥 DEV vs PROD
   if (envVars.NODE_ENV === "development") {
     return res.status(statusCode).json({
       success: false,
       statusCode,
       message,
       details,
-      stack: (error as Error)?.stack,
-      error,
+      stack: errorObj.stack, // ✅ safe now
+      error: errorObj,
     });
   }
 
-  // 🚀 PRODUCTION SAFE RESPONSE
   return res.status(statusCode).json({
     success: false,
     statusCode,

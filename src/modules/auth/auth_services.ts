@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "../../utils/globalErrorHelper.js";
 import { ILoginUser, IRegisterUser } from "./auth_interfaces.js";
-import { Role, UserStatus } from "../../../generated/prisma/enums";
+import { Role, UserStatus } from "../../../generated/prisma/enums.js";
 import { prisma } from "../../lib/prisma.js";
 import bcrypt from "bcryptjs";
 import { envVars } from "../../config/index.js";
@@ -66,88 +66,94 @@ const authLoginServices = async (payload: ILoginUser) => {
       throw new AppError(`${key} is not provided`, StatusCodes.BAD_REQUEST);
     }
   }
-  const user =await prisma.user.findUniqueOrThrow({
+  const user = await prisma.user.findUniqueOrThrow({
     where: {
       email,
     },
     select: {
-    id: true,
-    name: true,
-    email: true,
-    role: true,
-    password: true,
-    userStatus: true,
-  }
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      password: true,
+      userStatus: true,
+    },
   });
   userCheck(user);
   const isPasswordValid = await bcrypt.compare(password, user.password);
-  if(!isPasswordValid){
+  if (!isPasswordValid) {
     throw new AppError("Invalid email or password", StatusCodes.BAD_REQUEST);
-  };
-  const jwtPayload:JwtPayload = {
+  }
+  const jwtPayload: JwtPayload = {
     id: user.id,
     name: user.name,
     email: user.email,
     role: user.role,
-    userStatus: user.userStatus
-  }
+    userStatus: user.userStatus,
+  };
   const accessToken = jwtTokens.createToken(
     jwtPayload,
     envVars.JWT_ACCESS_SECRET,
-    envVars.JWT_ACCESS_EXPIRES_IN as SignOptions// StringValue 
+    envVars.JWT_ACCESS_EXPIRES_IN as SignOptions, // StringValue
   );
 
   const refreshToken = jwtTokens.createToken(
     jwtPayload,
     envVars.JWT_REFRESH_SECRET,
-    envVars.JWT_REFRESH_EXPIRES_IN as SignOptions//StringValue
+    envVars.JWT_REFRESH_EXPIRES_IN as SignOptions, //StringValue
   );
 
   return { accessToken, refreshToken };
 };
-const getAuthMeServices = async (userId:string)=>{
+const getAuthMeServices = async (userId: string) => {
   const user = await prisma.user.findUniqueOrThrow({
     where: {
-      id: userId
+      id: userId,
     },
     omit: {
-      password: true
-    }
+      password: true,
+    },
   });
   return {
-    user
-  }
-};
-const refreshTokenServices=async(refreshToken:string)=>{
-  const verifiedRefreshToken = jwtTokens.verifyToken(refreshToken, envVars.JWT_REFRESH_SECRET);
-  if(!verifiedRefreshToken.success){
-    throw new AppError(`${verifiedRefreshToken.error}`, StatusCodes.BAD_REQUEST);
-  }
-  const {id} = verifiedRefreshToken.data as JwtPayload;
-  const user = await prisma.user.findUniqueOrThrow({
-    where:{id},
-    omit:{password:true,}
-  });
-  if(user.userStatus===UserStatus.BANNED){
-    throw new AppError("This user is banned", StatusCodes.BAD_REQUEST)
+    user,
   };
-  const jwtPayload:JwtPayload={
+};
+const refreshTokenServices = async (refreshToken: string) => {
+  const verifiedRefreshToken = jwtTokens.verifyToken(
+    refreshToken,
+    envVars.JWT_REFRESH_SECRET,
+  );
+  if (!verifiedRefreshToken.success) {
+    throw new AppError(
+      `${verifiedRefreshToken.error}`,
+      StatusCodes.BAD_REQUEST,
+    );
+  }
+  const { id } = verifiedRefreshToken.data as JwtPayload;
+  const user = await prisma.user.findUniqueOrThrow({
+    where: { id },
+    omit: { password: true },
+  });
+  if (user.userStatus === UserStatus.BANNED) {
+    throw new AppError("This user is banned", StatusCodes.BAD_REQUEST);
+  }
+  const jwtPayload: JwtPayload = {
     id,
-    name:user.name,
-    email:user.email,
+    name: user.name,
+    email: user.email,
     role: user.role,
-    userStatus: user.userStatus
+    userStatus: user.userStatus,
   };
   const accessToken = jwtTokens.createToken(
     jwtPayload,
     envVars.JWT_ACCESS_SECRET,
-    envVars.JWT_ACCESS_EXPIRES_IN as SignOptions
-  )
-  return {accessToken}
+    envVars.JWT_ACCESS_EXPIRES_IN as SignOptions,
+  );
+  return { accessToken };
 };
 export const authServices = {
   authRegisterServices,
   authLoginServices,
   getAuthMeServices,
-  refreshTokenServices
+  refreshTokenServices,
 };

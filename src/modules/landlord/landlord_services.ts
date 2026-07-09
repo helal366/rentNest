@@ -13,7 +13,7 @@ import {
   PropertyRentRequestStatus,
   RentStatus,
   Role,
-} from "../../../generated/prisma/enums";
+} from "../../../generated/prisma/enums.js";
 import { validateLocation } from "../../helperFunction/locationValidityCheck.js";
 import { Prisma } from "../../../generated/prisma/client.js";
 
@@ -327,13 +327,16 @@ const approveOrRejectRentalRequestServices = async (
   payload: IApproveRejectRentRequestPayload,
 ) => {
   const { rentalRequestId, landlordId, landlordRole } = payload;
-  if(landlordRole !== Role.LANDLORD){
-    throw new AppError("Unauthorized Access. Please login as LANDLORD", StatusCodes.UNAUTHORIZED)
+  if (landlordRole !== Role.LANDLORD) {
+    throw new AppError(
+      "Unauthorized Access. Please login as LANDLORD",
+      StatusCodes.UNAUTHORIZED,
+    );
   }
   const rentalRequest = await prisma.rentalRequest.findUniqueOrThrow({
     where: {
       id: rentalRequestId,
-    }
+    },
   });
   if (rentalRequest.landlordId !== landlordId) {
     throw new AppError(
@@ -365,13 +368,12 @@ const approveOrRejectRentalRequestServices = async (
     });
 
     await tx.property.update({
-      where:{id:propertyId},
-      data:{
+      where: { id: propertyId },
+      data: {
         approvedTenantId: rentalRequest.tenantId,
-        rentStatus: RentStatus.RENTED
-      }
-    })
-
+        rentStatus: RentStatus.RENTED,
+      },
+    });
   });
 
   return {

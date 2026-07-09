@@ -160,7 +160,7 @@ export default app;
 
 ```
 import app from "./app";
-import { prisma } from "./lib/prisma";
+import { prisma } from "./lib/prisma.js";
 
 const PORT = process.env.PORT || 5000;
 async function main(){
@@ -279,7 +279,7 @@ allowBuilds:
 ```
 import app from "./app.js";
 import { envVars } from "./config/index.js";
-import { prisma } from "./lib/prisma";
+import { prisma } from "./lib/prisma.js";
 
 const PORT = envVars.PORT || 5000;
 async function connectDB() {

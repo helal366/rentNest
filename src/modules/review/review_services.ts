@@ -1,19 +1,20 @@
 import { StatusCodes } from "http-status-codes";
-import { PropertyRentRequestStatus, Role } from "../../../generated/prisma/enums";
+import {
+  PropertyRentRequestStatus,
+  Role,
+} from "../../../generated/prisma/enums.js";
 import { AppError } from "../../utils/globalErrorHelper.js";
 import { prisma } from "../../lib/prisma.js";
 import { ICreateReviewPayload } from "./review_interfaces.js";
 
-const createReviewServices = async (
-  payload: ICreateReviewPayload
-) => {
+const createReviewServices = async (payload: ICreateReviewPayload) => {
   const { tenantId, tenantRole, propertyId, content, rating } = payload;
 
   // 1. Role check
   if (tenantRole !== Role.TENANT) {
     throw new AppError(
       "Only tenants are allowed to create reviews.",
-      StatusCodes.FORBIDDEN
+      StatusCodes.FORBIDDEN,
     );
   }
 
@@ -29,7 +30,7 @@ const createReviewServices = async (
   if (!rentalRequest) {
     throw new AppError(
       "You can only review properties you have successfully rented.",
-      StatusCodes.BAD_REQUEST
+      StatusCodes.BAD_REQUEST,
     );
   }
 
@@ -46,17 +47,17 @@ const createReviewServices = async (
   if (existingReview) {
     throw new AppError(
       "You have already reviewed this property.",
-      StatusCodes.BAD_REQUEST
+      StatusCodes.BAD_REQUEST,
     );
-  };
+  }
 
   // 4. validating ratings
   if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
-  throw new AppError(
-    "Rating must be an integer between 1 and 5.",
-    StatusCodes.BAD_REQUEST
-  );
-}
+    throw new AppError(
+      "Rating must be an integer between 1 and 5.",
+      StatusCodes.BAD_REQUEST,
+    );
+  }
 
   // 5. Create review
   const review = await prisma.review.create({
@@ -70,6 +71,6 @@ const createReviewServices = async (
 
   return review;
 };
-export const reviewServices={
-    createReviewServices
-}
+export const reviewServices = {
+  createReviewServices,
+};

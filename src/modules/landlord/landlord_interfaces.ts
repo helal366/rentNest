@@ -1,28 +1,33 @@
 import { Prisma } from "../../../generated/prisma/client.js";
-import { PropertyAmenity, PropertyLocation, RentStatus, Role } from "../../../generated/prisma/enums";
+import {
+  PropertyAmenity,
+  PropertyLocation,
+  RentStatus,
+  Role,
+} from "../../../generated/prisma/enums.js";
 
-export interface ICreatePropertyPayload{
-    category: string,
-    rentPrice: number,
-    rentStatus?: RentStatus,
-    amenities: PropertyAmenity[],
-    location?: PropertyLocation,
-    areaInSqFt?: number
+export interface ICreatePropertyPayload {
+  category: string;
+  rentPrice: number;
+  rentStatus?: RentStatus;
+  amenities: PropertyAmenity[];
+  location?: PropertyLocation;
+  areaInSqFt?: number;
 }
-export interface ILandlordUpdatePropertyPayload{
-    category?: string,
-    rentPrice?: number,
-    rentStatus?: RentStatus,
-    amenities?: PropertyAmenity[],
-    location?: PropertyLocation,
-    areaInSqFt?: number,
-    approvedTenantId?: string | null
+export interface ILandlordUpdatePropertyPayload {
+  category?: string;
+  rentPrice?: number;
+  rentStatus?: RentStatus;
+  amenities?: PropertyAmenity[];
+  location?: PropertyLocation;
+  areaInSqFt?: number;
+  approvedTenantId?: string | null;
 }
-export interface IAdminUpdatePropertyPayload{
-    landlordId?: string,
-    deletedAt?: Date | string | null,
+export interface IAdminUpdatePropertyPayload {
+  landlordId?: string;
+  deletedAt?: Date | string | null;
 }
-export interface IUpdatePropertyPayload{
+export interface IUpdatePropertyPayload {
   category?: string;
   rentPrice?: number;
   rentStatus?: RentStatus;
@@ -36,7 +41,7 @@ export interface IUpdatePropertyPayload{
   isDeleted?: boolean;
   deletedAt?: Date | string | null;
   propertyCategoryId?: string;
-};
+}
 
 // import { Prisma } from "@prisma/client";
 export type TPropertyWithRequests = Prisma.PropertyGetPayload<{
@@ -46,8 +51,8 @@ export type TPropertyWithRequests = Prisma.PropertyGetPayload<{
   };
 }>;
 
-export interface IApproveRejectRentRequestPayload{
-        rentalRequestId: string,
-        landlordId:string,
-        landlordRole: Role
-    }
+export interface IApproveRejectRentRequestPayload {
+  rentalRequestId: string;
+  landlordId: string;
+  landlordRole: Role;
+}

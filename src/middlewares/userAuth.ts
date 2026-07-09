@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { catchAsync } from "../utils/catchAsync.js";
 import { envVars } from "../config/index.js";
-import { Role, UserStatus } from "../../generated/prisma/client.js";
+import { Role, UserStatus } from "../../generated/prisma/enums.js";
 import { StatusCodes } from "http-status-codes";
 import { sendResponse } from "../utils/sendResponse.js";
 import { prisma } from "../lib/prisma.js";
@@ -24,7 +24,11 @@ declare global {
 
 export const userAuth = (...requiredRoles: Role[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.cookies.accessToken? req.cookies.accessToken: (req.headers.authorization?.startsWith("Bearer") ? req.headers.authorization.split(" ")[1] : req.headers.authorization);
+    const token = req.cookies.accessToken
+      ? req.cookies.accessToken
+      : req.headers.authorization?.startsWith("Bearer")
+        ? req.headers.authorization.split(" ")[1]
+        : req.headers.authorization;
     const verifiedAccessToken = jwtTokens.verifyToken(
       token,
       envVars.JWT_ACCESS_SECRET,
@@ -38,8 +42,11 @@ export const userAuth = (...requiredRoles: Role[]) => {
       });
       return;
     }
-    if (!verifiedAccessToken.data || typeof verifiedAccessToken.data === "string") {
-      sendResponse(res, {   
+    if (
+      !verifiedAccessToken.data ||
+      typeof verifiedAccessToken.data === "string"
+    ) {
+      sendResponse(res, {
         success: false,
         message: "Invalid token payload",
         statusCode: StatusCodes.UNAUTHORIZED,
@@ -66,19 +73,19 @@ export const userAuth = (...requiredRoles: Role[]) => {
       return;
     }
     const { id, name, email, role, userStatus } = verifiedAccessToken.data;
-    const user= await prisma.user.findUniqueOrThrow({
-      where: { id }, 
+    const user = await prisma.user.findUniqueOrThrow({
+      where: { id },
       select: {
         id: true,
-         email: true,
-          name: true,
-           role: true,
-            userStatus: true
-      }
+        email: true,
+        name: true,
+        role: true,
+        userStatus: true,
+      },
     });
     userCheck(user);
     req.user = { id, name, email, role, userStatus };
 
     next();
-  }
-)}
+  });
+};

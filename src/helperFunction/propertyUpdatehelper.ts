@@ -1,14 +1,15 @@
 import { StatusCodes } from "http-status-codes";
-import { Prisma, RentStatus, Role } from "../../generated/prisma/client.js";
+import { Prisma } from "../../generated/prisma/client.js";
+import { RentStatus, Role } from "../../generated/prisma/enums.js";
 import {
   IAdminUpdatePropertyPayload,
   ILandlordUpdatePropertyPayload,
   TPropertyWithRequests,
-} from "../modules/landlord/landlord_interfaces";
-import { AppError } from "../utils/globalErrorHelper";
-import { prisma } from "../lib/prisma";
-import { validateAmenities } from "./amenitiesValidityCheck";
-import { validateLocation } from "./locationValidityCheck";
+} from "../modules/landlord/landlord_interfaces.js";
+import { AppError } from "../utils/globalErrorHelper.js";
+import { prisma } from "../lib/prisma.js";
+import { validateAmenities } from "./amenitiesValidityCheck.js";
+import { validateLocation } from "./locationValidityCheck.js";
 
 export const propertyUpdateHelper = async(
   userRole: Role,

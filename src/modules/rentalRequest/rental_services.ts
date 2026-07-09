@@ -1,8 +1,11 @@
 import { StatusCodes } from "http-status-codes";
 import { prisma } from "../../lib/prisma.js";
 import { AppError } from "../../utils/globalErrorHelper.js";
-import { Role } from "../../../generated/prisma/enums";
-import { ICreateRentalRequestPayload, IGetRentalRequestByIdPayload } from "./rental_interfaces.js";
+import { Role } from "../../../generated/prisma/enums.js";
+import {
+  ICreateRentalRequestPayload,
+  IGetRentalRequestByIdPayload,
+} from "./rental_interfaces.js";
 
 const createRentalRequestServices = async (
   payload: ICreateRentalRequestPayload,
@@ -58,18 +61,18 @@ const getRentalRequestsByTenantServices = async (
     include: {
       rentalRequestProperty: {
         select: {
-            id:true,
-            rentStatus: true,
-            approvedTenant: {
-                select: {
-                    name: true,
-                    email: true
-                }
+          id: true,
+          rentStatus: true,
+          approvedTenant: {
+            select: {
+              name: true,
+              email: true,
             },
-            location: true,
-            areaInSqFt: true,
-            amenities: true
-        }
+          },
+          location: true,
+          areaInSqFt: true,
+          amenities: true,
+        },
       },
       landlord: {
         select: {
@@ -86,53 +89,60 @@ const getRentalRequestsByTenantServices = async (
   return rentalRequests;
 };
 
-const getRentalRequestByIdServices=async(payload:IGetRentalRequestByIdPayload)=>{
-    const {rentalRequestId, userId, userRole}= payload;
-    const rentalRequest = await prisma.rentalRequest.findUniqueOrThrow({
-        where: {
-            id: rentalRequestId
+const getRentalRequestByIdServices = async (
+  payload: IGetRentalRequestByIdPayload,
+) => {
+  const { rentalRequestId, userId, userRole } = payload;
+  const rentalRequest = await prisma.rentalRequest.findUniqueOrThrow({
+    where: {
+      id: rentalRequestId,
+    },
+    include: {
+      rentalRequestProperty: {
+        select: {
+          id: true,
+          rentPrice: true,
+          location: true,
+          rentStatus: true,
         },
-        include: {
-    rentalRequestProperty: {
+      },
+      landlord: {
         select: {
-            id: true,
-            rentPrice: true,
-            location: true,
-            rentStatus: true
-        }
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+      tenant: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
     },
-    landlord: {
-        select: {
-            id: true,
-            name: true,
-            email: true
-        }
-    },
-    tenant: {
-        select: {
-            id: true,
-            name: true,
-            email: true
-        }
+  });
+  if (userRole === Role.TENANT) {
+    if (userId !== rentalRequest.tenantId) {
+      throw new AppError(
+        "Access Denied: Tenant is not the submitter of this rental request.",
+        StatusCodes.FORBIDDEN,
+      );
     }
-}
-    });
-    if(userRole===Role.TENANT){
-        if(userId !== rentalRequest.tenantId){
-            throw new AppError("Access Denied: Tenant is not the submitter of this rental request.", StatusCodes.FORBIDDEN)
-        }
-    };
-    if(userRole===Role.LANDLORD){
-        if(userId !== rentalRequest.landlordId){
-            throw new AppError("Access Denied: Landlord is not the owner of the property for which this rental request created",StatusCodes.FORBIDDEN)
-        }
-    };
-    return {rentalRequest}
+  }
+  if (userRole === Role.LANDLORD) {
+    if (userId !== rentalRequest.landlordId) {
+      throw new AppError(
+        "Access Denied: Landlord is not the owner of the property for which this rental request created",
+        StatusCodes.FORBIDDEN,
+      );
+    }
+  }
+  return { rentalRequest };
 };
-
 
 export const rentalRequestServices = {
   createRentalRequestServices,
   getRentalRequestsByTenantServices,
-  getRentalRequestByIdServices
+  getRentalRequestByIdServices,
 };

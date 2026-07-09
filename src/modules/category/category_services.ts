@@ -1,4 +1,5 @@
-import { prisma } from "../../lib/prisma"
+import { prisma } from "../../lib/prisma.js"
+import { ICategory } from "./category_interfaces.js";
 
 const getAllCategoriesServices=async()=>{
     const categoryDetails = await prisma.category.findMany({
@@ -8,7 +9,7 @@ const getAllCategoriesServices=async()=>{
         }
     });
     let categories:string[]=[];
-    categoryDetails.map(cat=>{
+    categoryDetails.map((cat:ICategory)=>{
         categories.push(cat.name)
     })
     return {categories}

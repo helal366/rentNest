@@ -1,6 +1,5 @@
-
 import { StatusCodes } from "http-status-codes";
-import { PropertyLocation } from "../../generated/prisma/enums";
+import { PropertyLocation } from "../../generated/prisma/enums.js";
 import { AppError } from "../utils/globalErrorHelper.js";
 
 export const validateLocation = (location: string): PropertyLocation => {
@@ -16,7 +15,7 @@ export const validateLocation = (location: string): PropertyLocation => {
   if (!validLocations.includes(normalizedLocation as PropertyLocation)) {
     throw new AppError(
       `Invalid location: ${location}. Allowed locations are: ${validLocations.join(", ")}`,
-      StatusCodes.BAD_REQUEST
+      StatusCodes.BAD_REQUEST,
     );
   }
 

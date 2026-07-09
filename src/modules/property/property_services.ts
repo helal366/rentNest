@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { PropertyLocation } from "../../../generated/prisma/enums";
+import { PropertyLocation } from "../../../generated/prisma/enums.js";
 import { prisma } from "../../lib/prisma.js";
 import { AppError } from "../../utils/globalErrorHelper.js";
 
@@ -9,43 +9,46 @@ type TPropertyFilters = {
   maxPrice?: number;
   category?: string; // or category name
 };
-const getAllPropertiesServices = async (filters:TPropertyFilters) => {
-  const {location, minPrice, maxPrice, category} = filters;
-  const whereConditions:any={}
-  if(location){
-    whereConditions.location=location;
+const getAllPropertiesServices = async (filters: TPropertyFilters) => {
+  const { location, minPrice, maxPrice, category } = filters;
+  const whereConditions: any = {};
+  if (location) {
+    whereConditions.location = location;
   }
-  if(minPrice!==null || maxPrice!==null){
-    if(maxPrice && minPrice){
-        if(maxPrice < minPrice){
-          throw new AppError("Max Price must greater than min price.", StatusCodes.BAD_REQUEST);
-        }
+  if (minPrice !== null || maxPrice !== null) {
+    if (maxPrice && minPrice) {
+      if (maxPrice < minPrice) {
+        throw new AppError(
+          "Max Price must greater than min price.",
+          StatusCodes.BAD_REQUEST,
+        );
       }
-    whereConditions.AND = [];
-      if(maxPrice!==null){
-        whereConditions.AND.push({
-          maxPrice:{
-            gte:maxPrice
-          }
-        })
-      };
-      if(minPrice!==null){
-        whereConditions.AND.push({
-          minPrice:{
-            lte:minPrice
-          }
-        })
-      };
-    };
-    if(category){
-      const propertyCategory = await prisma.category.findUniqueOrThrow({
-        where: {
-          name: category
-        }
-      });
-      whereConditions.propertyCategoryId= propertyCategory.id;
     }
-  
+    whereConditions.AND = [];
+    if (maxPrice !== null) {
+      whereConditions.AND.push({
+        maxPrice: {
+          gte: maxPrice,
+        },
+      });
+    }
+    if (minPrice !== null) {
+      whereConditions.AND.push({
+        minPrice: {
+          lte: minPrice,
+        },
+      });
+    }
+  }
+  if (category) {
+    const propertyCategory = await prisma.category.findUniqueOrThrow({
+      where: {
+        name: category,
+      },
+    });
+    whereConditions.propertyCategoryId = propertyCategory.id;
+  }
+
   const allProperties = await prisma.property.findMany({
     where: whereConditions,
     include: {
