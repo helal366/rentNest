@@ -9,6 +9,7 @@ model RentalRequest{
 
     requestStatus PropertyRentRequestStatus @default(PENDING)
 
+    isPaid Boolean @default(false)
     transaction Payment? @relation(name: "PaymentToRentalRequest")
 
     landlordId String
