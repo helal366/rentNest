@@ -165,3 +165,60 @@ async function main(){
 main();
 ```
 
+* Stripe payment
+- Sign up/Login first
+- Go to Stripe docs from Developer tab
+- Get started with Stripe
+- Sell subscription as SaaS start-up
+- Create a test product and price
+- Click on the option: Create a test product in the dashboard
+
+-> Another way: 
+- Go to Dashboard
+- Product Catalog
+- Create product
+
+*** 
+Now create product
+- Fill up name and description
+- Pricing Model : Standard pricing
+- Price in BDT (should select this currency)
+- According to project : Recurring or One Time (One Time for now)
+
+
+
+### deployment in vercel
+* create vercel.json file in the root directory. write the following code.
+```
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "dist/server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "dist/server.js"
+    }
+  ]
+}
+```
+
+* then go to terminal and run the following command:
+```
+pnpm build
+```
+
+* globally install vercel:
+```
+pnpm add -g vercel
+pnpm approve-builds -g 
+```
+
+* then login to vercel:
+```
+vercel login
+```

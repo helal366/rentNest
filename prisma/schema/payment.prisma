@@ -10,7 +10,7 @@ model Payment{
 
     amount Int
 
-    paymentStatus PaymentStatus
+    paymentStatus PaymentStatus 
     // stripe related infos
     stripeCustomerId String @unique // stripe customer id 
     stripeSubscriptionId String @unique  // stripe subscription id

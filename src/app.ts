@@ -11,6 +11,7 @@ import { rentalRouter } from "./modules/rentalRequest/rental_routes";
 import { categoryRouter } from "./modules/category/category_routes";
 import { adminRouter } from "./modules/admin/admin_routes";
 import { reviewRouter } from "./modules/review/review_routes";
+import { paymentRouter } from "./modules/payment/payment_routes";
 
 const app:Application = express();
 app.use(cors({
@@ -31,6 +32,7 @@ app.use("/api/rentals", rentalRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/reviews", reviewRouter);
+app.use("/api/payments", paymentRouter)
 app.use(notFound);
 app.use(globalErrorHandler);
 export default app;
