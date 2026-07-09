@@ -270,3 +270,32 @@ allowBuilds:
   esbuild: true
   prisma: true
 ```
+
+* now go to server.ts and replace the code with the following:
+```
+import app from "./app";
+import { envVars } from "./config";
+import { prisma } from "./lib/prisma";
+
+const PORT = envVars.PORT || 5000;
+async function connectDB() {
+  try {
+    await prisma.$connect();
+    console.log("Connected to the database successfully.");
+  } catch (error) {
+    console.error("Error starting server:", error);
+  }
+}
+connectDB();
+
+if (process.env.NODE_ENV !== "production") {
+  const server = app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+
+  server.on("error", (err) => {
+    console.error("Server failed to start:", err);
+  });
+}
+export default app;
+```
