@@ -140,7 +140,7 @@ export { prisma };
 import cookieParser from "cookie-parser";
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
-import { envVars } from "./config";
+import { envVars } from "./config/index.js";
 
 const app:Application = express();
 app.use(cors({
@@ -178,7 +178,9 @@ async function main(){
 }
 main();
 ```
+
 ### stripe payment
+
 - Stripe payment
 
 * Sign up/Login first
@@ -261,6 +263,7 @@ step by step answer the appeared questions
 - now go to vercel and add the env variables.
 
 * go to pnpm-workspace.yaml file and replace everything with the following code:
+
 ```
 packages:
   - .
@@ -271,10 +274,11 @@ allowBuilds:
   prisma: true
 ```
 
-* now go to server.ts and replace the code with the following:
+- now go to server.ts and replace the code with the following:
+
 ```
-import app from "./app";
-import { envVars } from "./config";
+import app from "./app.js";
+import { envVars } from "./config/index.js";
 import { prisma } from "./lib/prisma";
 
 const PORT = envVars.PORT || 5000;

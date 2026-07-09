@@ -1,5 +1,5 @@
 import app from "./app.js";
-import { envVars } from "./config";
+import { envVars } from "./config/index.js";
 import { prisma } from "./lib/prisma";
 
 async function connectDB() {
@@ -13,7 +13,7 @@ async function connectDB() {
 connectDB();
 
 if (envVars.NODE_ENV !== "production") {
-    const PORT = envVars.PORT || 5000;
+  const PORT = envVars.PORT || 5000;
   const server = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
@@ -22,7 +22,6 @@ if (envVars.NODE_ENV !== "production") {
     console.error("Server failed to start:", err);
   });
 }
-
 
 export default app;
 
