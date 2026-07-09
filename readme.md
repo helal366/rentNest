@@ -178,7 +178,7 @@ async function main(){
 }
 main();
 ```
-
+### stripe payment
 - Stripe payment
 
 * Sign up/Login first

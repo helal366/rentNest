@@ -2,7 +2,6 @@ import app from "./app";
 import { envVars } from "./config";
 import { prisma } from "./lib/prisma";
 
-const PORT = envVars.PORT || 5000;
 async function connectDB() {
   try {
     await prisma.$connect();
@@ -13,7 +12,8 @@ async function connectDB() {
 }
 connectDB();
 
-if (process.env.NODE_ENV !== "production") {
+if (envVars.NODE_ENV !== "production") {
+    const PORT = envVars.PORT || 5000;
   const server = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
