@@ -13,7 +13,7 @@ paymentRouter.post(
 
 // Confirm payment via IPN Webhook or Status Gateway Redirect Callbacks
 paymentRouter.post(
-  "/confirm",
+  "/success",
   paymentControllers.confirmPaymentController,
 );
 

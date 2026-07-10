@@ -15,12 +15,7 @@ import { paymentRouter } from "./modules/payment/payment_routes.js";
 import { html } from "./utils/html.js";
 
 const app: Application = express();
-app.use(
-  cors({
-    origin: envVars.APP_LOCAL_URL,
-    credentials: true,
-  }),
-);
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

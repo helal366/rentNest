@@ -7,6 +7,8 @@ export interface IRegisterUser {
   role: Role;
   password: string;
   userStatus?: UserStatus;
+  address: string;
+  contactNo: string
 }
 
 export interface ILoginUser {

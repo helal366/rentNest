@@ -2,14 +2,15 @@ import { StatusCodes } from "http-status-codes";
 import { AppError } from "./globalErrorHelper.js";
 import { Role, UserStatus } from "#db-client"; 
 
-interface IUser {
+interface IUserCheck {
   id: string;
   name: string;
   email: string;
   role: Role;
+  password?: string;
   userStatus: UserStatus;
 }
-export const userCheck = (user: IUser | null | undefined) => {
+export const userCheck = (user: IUserCheck | null | undefined) => {
   if (!user) {
     throw new AppError("User not found", StatusCodes.NOT_FOUND);
   }

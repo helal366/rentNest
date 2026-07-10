@@ -10,8 +10,8 @@ import { jwtTokens } from "../../utils/jwtTokens.js";
 import { Role, UserStatus } from "#db-client"; 
 
 const authRegisterServices = async (payload: IRegisterUser) => {
-  const { name, email, role, password } = payload;
-  const fields = { name, email, role, password };
+  const { name, email, role, password, address, contactNo } = payload;
+  const fields = { name, email, role, password, address, contactNo };
   for (const [key, value] of Object.entries(fields)) {
     if (typeof value !== "string" || value?.trim() === "") {
       throw new AppError(`${key} is not provided`, StatusCodes.BAD_REQUEST);
@@ -26,7 +26,7 @@ const authRegisterServices = async (payload: IRegisterUser) => {
   }
   const userExist = await prisma.user.findUnique({
     where: {
-      email,
+      email
     },
   });
   if (userExist) {
@@ -39,23 +39,44 @@ const authRegisterServices = async (payload: IRegisterUser) => {
     password,
     Number(envVars.BCRYPT_SALT_ROUND),
   );
-  const createdUser = await prisma.user.create({
+  const upperAddress = address
+  .trim()
+  .toLowerCase()
+  .replace(/\b\w/g, (char) => char.toUpperCase());
+
+  // Validate Bangladeshi Contact Number (Starts with 01 or 09, exactly 11 digits)
+const bdPhoneRegex = /^(01|09)\d{9}$/;
+const cleanContactNo = contactNo.trim();
+
+if (!bdPhoneRegex.test(cleanContactNo)) {
+  throw new AppError(
+    "Invalid contact number. Must be a valid 11-digit Bangladeshi number starting with 01 or 09.",
+    StatusCodes.BAD_REQUEST
+  );
+}
+
+  const user = await prisma.user.create({
     data: {
       name,
       email,
       password: hashedPassword,
       role,
+      address:upperAddress,
+      contactNo:cleanContactNo
     },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      address: true,
+      contactNo: true,
+      userStatus: true,
+      createdAt: true,
+      updatedAt: true
+    }
   });
-  const user = await prisma.user.findUniqueOrThrow({
-    where: {
-      id: createdUser.id,
-      email,
-    },
-    omit: {
-      password: true,
-    },
-  });
+
   return { user };
 };
 const authLoginServices = async (payload: ILoginUser) => {
@@ -77,8 +98,11 @@ const authLoginServices = async (payload: ILoginUser) => {
       role: true,
       password: true,
       userStatus: true,
+      address: true,
+      contactNo: true
     },
   });
+  console.log(user);
   userCheck(user);
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {

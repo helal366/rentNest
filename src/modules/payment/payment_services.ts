@@ -41,37 +41,70 @@ const createPaymentServices = async (
   }
 };
 
-const confirmPaymentServices = async (paymentPayload: any) => {
-  const { tran_id, status } = paymentPayload;
+const confirmPaymentServices = async (payload: any) => {
+  const { tran_id, status, val_id, risk_title, card_type, amount, value_a, value_b, value_c } = payload;
 
   if (!tran_id) {
     throw new AppError("Transaction ID missing in webhook payload", StatusCodes.BAD_REQUEST);
   }
 
-  // Find the pending payment transaction in your database
-  const paymentRecord = await prisma.payment.findUnique({
-    where: { transactionId: tran_id },
-  });
-
-  if (!paymentRecord) {
-    throw new AppError("Transaction record not found", StatusCodes.NOT_FOUND);
+  // Parse card types to match your explicit PaymentMethod Enum
+  const cardTypeLower = card_type?.toLowerCase() || "";
+  let cleanMethod: "CARD" | "WALLET" | "BANK_TRANSFER" = "CARD";
+  
+  if (cardTypeLower.includes("bkash") || cardTypeLower.includes("nagad") || cardTypeLower.includes("rocket")) {
+    cleanMethod = "WALLET";
+  } else if (cardTypeLower.includes("bank")) {
+    cleanMethod = "BANK_TRANSFER";
   }
 
-  // Check if incoming gateway status is verified success
+  /// If payment is successful
   if (status === "VALID" || status === "VALIDATED") {
-    return await prisma.payment.update({
-      where: { transactionId: tran_id },
-      data: { paymentStatus: "COMPLETED" }, // Maps to your database Payment Status schema
+    return await prisma.$transaction(async (tx) => {
+      
+      // 1. Create the Payment row for the first time
+      const newPayment = await tx.payment.create({
+        data: {
+          transactionId: tran_id,
+          rentalRequestId: value_a, // Extracted from custom value_a parameter
+          tenantId: value_b,        // Extracted from custom value_b parameter
+          landlordId: value_c,      // Extracted from custom value_c parameter
+          amount: Number(amount),
+          paymentStatus: "COMPLETED",
+          sslSessionId: payload.sessionkey || "SESSION_COMPLETED",
+          sslValidationId: val_id,
+          sslRiskTitle: risk_title,
+          sslCardType: card_type,
+          method: cleanMethod,
+          paidAt: new Date()
+        }
+      });
+
+      // 2. Mark the corresponding rental request as paid
+      await tx.rentalRequest.update({
+        where: { id: value_a },
+        data: { isPaid: true }
+      });
+
+      return newPayment;
     });
   }
 
-  // Handle alternative failure scenarios
-  await prisma.payment.update({
-    where: { transactionId: tran_id },
-    data: { paymentStatus: "FAILED" },
+  // If payment fails, log it as a failed record
+  return await prisma.payment.create({
+    data: {
+      transactionId: tran_id,
+      rentalRequestId: value_a,
+      tenantId: value_b,
+      landlordId: value_c,
+      amount: Number(amount) || 0,
+      paymentStatus: "FAILED",
+      sslSessionId: payload.sessionkey || "SESSION_FAILED",
+      provider: "SSLCOMMERZ",
+      method: cleanMethod
+    }
   });
-
-  throw new AppError(`Payment failed with status: ${status}`, StatusCodes.PAYMENT_REQUIRED);
+  
 };
 
 
