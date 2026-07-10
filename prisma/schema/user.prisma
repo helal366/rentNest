@@ -4,11 +4,14 @@ model User{
     email String @unique
     role Role 
     password String
+    address String 
+    contactNo String 
     userStatus UserStatus @default(UNBAN)
 
     tenantReviews Review[]
 
-    payments Payment[]
+    tenantPayments Payment[] @relation("TenantPayments")
+    landlordPayments Payment[] @relation("LandlordPayments") 
 
     tenantRentalRequests RentalRequest[] @relation("TenantRentalRequests")
     approvedRentalProperties Property[] @relation("ApprovedRentalProperties")
@@ -21,6 +24,6 @@ model User{
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@index([role])
+    @@index([id])
     @@map("users")
 }

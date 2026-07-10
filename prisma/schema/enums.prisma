@@ -26,9 +26,14 @@ enum RentStatus{
     AVAILABLE
 }
 enum PaymentMethod{
-    CARD
-    WALLET
-    BANK_TRANSFER
+    CARD     // For Visa, Mastercard, Amex, etc.
+    WALLET  // For bKash, Nagad, Rocket, Upay, etc.
+    BANK_TRANSFER    // For Internet Banking (City Bank, Islami Bank, etc.)
+}
+enum PaymentStatus{
+    PENDING
+    COMPLETED
+    FAILED
 }
 enum PaymentProvider{
     STRIPE
@@ -69,8 +74,3 @@ enum PropertyLocation{
     FARMGATE
 }
 
-enum PaymentStatus{
-    PENDING
-    COMPLETED
-    FAILED
-}

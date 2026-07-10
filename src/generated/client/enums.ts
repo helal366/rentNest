@@ -53,6 +53,15 @@ export const PaymentMethod = {
 export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]
 
 
+export const PaymentStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+} as const
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
+
+
 export const PaymentProvider = {
   STRIPE: 'STRIPE',
   SSLCOMMERZ: 'SSLCOMMERZ'
@@ -101,12 +110,3 @@ export const PropertyLocation = {
 } as const
 
 export type PropertyLocation = (typeof PropertyLocation)[keyof typeof PropertyLocation]
-
-
-export const PaymentStatus = {
-  PENDING: 'PENDING',
-  COMPLETED: 'COMPLETED',
-  FAILED: 'FAILED'
-} as const
-
-export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]

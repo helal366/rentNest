@@ -627,10 +627,6 @@ export type PropertyUpdateamenitiesInput = {
   push?: $Enums.PropertyAmenity | $Enums.PropertyAmenity[]
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type PropertyCreateNestedOneWithoutPropertyRentRequestsInput = {
   create?: Prisma.XOR<Prisma.PropertyCreateWithoutPropertyRentRequestsInput, Prisma.PropertyUncheckedCreateWithoutPropertyRentRequestsInput>
   connectOrCreate?: Prisma.PropertyCreateOrConnectWithoutPropertyRentRequestsInput

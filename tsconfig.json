@@ -19,6 +19,6 @@
       "#db-client": ["./generated/client/client.ts"]
     }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/types/**/*.d.ts"],
   "exclude": ["node_modules", "prisma/generated", "prisma.config.ts"]
 }

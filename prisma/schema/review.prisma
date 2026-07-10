@@ -11,6 +11,9 @@ model Review{
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    @@index([id])
+    @@index([tenantId])
+    @@index([propertyId])
      @@unique([tenantId, propertyId], name:"uniqueTenantProperty")
     @@map("reviews")
 }

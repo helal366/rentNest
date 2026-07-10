@@ -2,23 +2,35 @@ model Payment{
     id String @id @default(uuid())
     transactionId String @unique
 
-    rentalRequestId String @unique
+    rentalRequestId String 
     rentalRequest RentalRequest @relation(name: "PaymentToRentalRequest", fields: [rentalRequestId], references: [id], onDelete:Cascade)
-
+    
     tenantId String
-    tenant User @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+    tenant User @relation("TenantPayments",fields: [tenantId], references: [id], onDelete: Cascade)
+
+
+     landlordId String
+     landlord User @relation(name: "LandlordPayments", fields: [landlordId], references: [id], onDelete: Cascade)
 
     amount Int
 
     paymentStatus PaymentStatus 
     // stripe related infos
-    stripeCustomerId String @unique // stripe customer id 
-    stripeSubscriptionId String @unique  // stripe subscription id
+    // stripeCustomerId String @unique // stripe customer id 
+    // stripeSubscriptionId String @unique  // stripe subscription id
+
+     // SSLCommerz related infos
+    sslSessionId     String   @unique // Session key returned during payment initiation
+    sslValidationId  String?  @unique // Val_id returned by SSLCommerz after successful verification
+    sslRiskTitle     String?          // Risk rating title (e.g., Safe, Risk)
+    sslCardType      String?          // Brand/Type of card used (e.g., VISA-Classic, Bkash)
 
     method PaymentMethod @default(CARD)
-    provider PaymentProvider @default(STRIPE)
+    provider PaymentProvider @default(SSLCOMMERZ)
     paidAt DateTime @default(now())
 
     @@index([tenantId])
+    @@index([landlordId])
+    @@index([rentalRequestId])
     @@map("payments")
 }

@@ -143,6 +143,8 @@ const refreshTokenServices = async (refreshToken: string) => {
     email: user.email,
     role: user.role,
     userStatus: user.userStatus,
+    address: user.address,
+    contactNo: user.contactNo
   };
   const accessToken = jwtTokens.createToken(
     jwtPayload,

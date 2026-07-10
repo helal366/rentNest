@@ -320,3 +320,18 @@ export ENABLE_EXPERIMENTAL_COREPACK=1
 vercel --prod --force
 
 ```
+
+#### SSLCOMMERZ
+* Payment gateway
+* View Docs
+* Create SandBox
+* Store the given informations ent to your email
+* Go to Merchant url
+* Login
+
+* Initiate Payment
+* install sslcommerz
+```
+pnpm add sslcommerz-lts
+pnpm add --save-dev @types/sslcommerz-lts
+```

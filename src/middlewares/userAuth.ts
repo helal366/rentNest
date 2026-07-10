@@ -17,6 +17,8 @@ declare global {
         email: string;
         role: Role;
         userStatus: UserStatus;
+        address: string;
+        contactNo: string
       };
     }
   }
@@ -72,7 +74,7 @@ export const userAuth = (...requiredRoles: Role[]) => {
       });
       return;
     }
-    const { id, name, email, role, userStatus } = verifiedAccessToken.data;
+    const { id, name, email, role, userStatus, address } = verifiedAccessToken.data;
     const user = await prisma.user.findUniqueOrThrow({
       where: { id },
       select: {
@@ -81,10 +83,12 @@ export const userAuth = (...requiredRoles: Role[]) => {
         name: true,
         role: true,
         userStatus: true,
+        address: true,
+        contactNo: true
       },
     });
     userCheck(user);
-    req.user = { id, name, email, role, userStatus };
+    req.user = { id, name, email, role, userStatus, address, contactNo };
 
     next();
   });
