@@ -5,6 +5,7 @@ import { Role} from "#db-client";
 import { sslCommerzInit } from "../../utils/sslcommerz/sslcommerz_init.js";
 import { findData } from "../../utils/sslcommerz/findData.js";
 import { createPaymentCheckValidity } from "../../utils/sslcommerz/createPaymentCheckValidity.js";
+import { validateSslPayment } from "../../utils/sslcommerz/ssl_commerz_ipn_validation.js";
 
 const createPaymentServices = async (
   tenantId:string,
@@ -48,6 +49,25 @@ const confirmPaymentServices = async (payload: any) => {
     throw new AppError("Transaction ID missing in webhook payload", StatusCodes.BAD_REQUEST);
   }
 
+  // --- START OF IPN VALIDATION ---
+  // Call the official SSLCommerz validation endpoint
+  const verifiedData = await validateSslPayment(val_id);
+
+
+  // Check if the validation server confirms the status as VALID or VALIDATED
+  if (verifiedData.status !== "VALID" && verifiedData.status !== "VALIDATED") {
+    throw new AppError("Payment validation failed at SSLCommerz", StatusCodes.PAYMENT_REQUIRED);
+  }
+
+  // Fetch the actual rental and property data from your system database
+  const { property } = await findData(value_a); // value_a contains rentalRequestId
+
+   // CRITICAL: Double check that the user didn't temper with the pricing parameters
+  if (Number(verifiedData.amount) !== Number(property.rentPrice)) {
+    throw new AppError("Payment amount mismatch anomaly detected", StatusCodes.BAD_REQUEST);
+  }
+  // --- END OF IPN VALIDATION ---
+
   // Parse card types to match your explicit PaymentMethod Enum
   const cardTypeLower = card_type?.toLowerCase() || "";
   let cleanMethod: "CARD" | "WALLET" | "BANK_TRANSFER" = "CARD";
@@ -59,6 +79,7 @@ const confirmPaymentServices = async (payload: any) => {
   }
 
   /// If payment is successful
+  /// verifiedData.status === "VALID" || verifiedData.status === "VALIDATED"
   if (status === "VALID" || status === "VALIDATED") {
     return await prisma.$transaction(async (tx) => {
       
