@@ -17,7 +17,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"name\": \"samir19\",\r\n    \"email\": \"samir19@gmail.com\",\r\n    \"role\": \"LANDLORD\",\r\n    \"password\": \"123456\",\r\n    \"address\":\"DHAKA\",\r\n    \"contactNo\":\"01788555989\"\r\n}",
+              "raw": "{\r\n    \"name\": \"samir20\",\r\n    \"email\": \"samir20@gmail.com\",\r\n    \"role\": \"LANDLORD\",\r\n    \"password\": \"123456\",\r\n    \"address\":\"DHAKA\",\r\n    \"contactNo\":\"01788555989\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -25,12 +25,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:5000/api/auth/register",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/api/auth/register",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
                 "api",
                 "auth",
@@ -55,12 +56,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:5000/api/auth/login",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/api/auth/login",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
                 "api",
                 "auth",
@@ -83,12 +85,13 @@
               "raw": "{\r\n    \"email\": \"samir10@gmail.com\",\r\n    \"password\": \"123456\"\r\n}"
             },
             "url": {
-              "raw": "http://localhost:5000/api/auth/me",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/api/auth/me",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
                 "api",
                 "auth",
@@ -108,12 +111,13 @@
               "raw": "{\r\n    \"email\": \"samir10@gmail.com\",\r\n    \"password\": \"123456\"\r\n}"
             },
             "url": {
-              "raw": "http://localhost:5000/api/auth/refresh-token",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/api/auth/refresh-token",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
                 "api",
                 "auth",
@@ -143,12 +147,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:5000/api/landlord/properties",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/api/landlord/properties",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
                 "api",
                 "landlord",
@@ -173,14 +178,14 @@
               }
             },
             "url": {
-              "raw": "http://localhost:5000/api/landlord/properties/748fb80c-cc16-4845-850b-ed71ffa6df82",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/landlord/properties/748fb80c-cc16-4845-850b-ed71ffa6df82",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
-                "api",
                 "landlord",
                 "properties",
                 "748fb80c-cc16-4845-850b-ed71ffa6df82"
@@ -195,14 +200,14 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "http://localhost:5000/api/landlord/properties/08b62407-e169-47fb-af91-162429ff1d38",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/landlord/properties/08b62407-e169-47fb-af91-162429ff1d38",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
-                "api",
                 "landlord",
                 "properties",
                 "08b62407-e169-47fb-af91-162429ff1d38"
@@ -217,12 +222,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:5000/api/landlord/requests",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/api/landlord/requests",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
                 "api",
                 "landlord",
@@ -247,12 +253,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:5000/api/landlord/requests/6c89c174-27a9-46c2-ae4d-2841fbf194e4",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/api/landlord/requests/6c89c174-27a9-46c2-ae4d-2841fbf194e4",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
                 "api",
                 "landlord",
@@ -274,14 +281,14 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:5000/api/properties/",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/properties/",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
-                "api",
                 "properties",
                 ""
               ]
@@ -295,14 +302,14 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:5000/api/properties/08b62407-e169-47fb-af91-162429ff1d38",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/properties/08b62407-e169-47fb-af91-162429ff1d38",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
-                "api",
                 "properties",
                 "08b62407-e169-47fb-af91-162429ff1d38"
               ]
@@ -330,14 +337,14 @@
               }
             },
             "url": {
-              "raw": "http://localhost:5000/api/rentals/",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/rentals/",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
-                "api",
                 "rentals",
                 ""
               ]
@@ -358,14 +365,14 @@
               "raw": "{\r\n    \"propertyId\": \"3f101891-b676-4a11-b88b-2c4748fb8041\",\r\n    \"landlordId\" : \"f0ec1caf-ddaf-43c7-b3e5-dc24f8cc9f78\"\r\n}"
             },
             "url": {
-              "raw": "http://localhost:5000/api/rentals/6c89c174-27a9-46c2-ae4d-2841fbf194e4",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/rentals/6c89c174-27a9-46c2-ae4d-2841fbf194e4",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
-                "api",
                 "rentals",
                 "6c89c174-27a9-46c2-ae4d-2841fbf194e4"
               ]
@@ -379,14 +386,14 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:5000/api/rentals/",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/rentals/",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
-                "api",
                 "rentals",
                 ""
               ]
@@ -405,14 +412,14 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:5000/api/categories",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/categories",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
-                "api",
                 "categories"
               ]
             }
@@ -430,14 +437,14 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:5000/api/admin/users",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/admin/users",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
-                "api",
                 "admin",
                 "users"
               ]
@@ -451,14 +458,14 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:5000/api/admin/properties",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/admin/properties",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
-                "api",
                 "admin",
                 "properties"
               ]
@@ -472,14 +479,14 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:5000/api/admin/rentals",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/admin/rentals",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
-                "api",
                 "admin",
                 "rentals"
               ]
@@ -502,14 +509,14 @@
               }
             },
             "url": {
-              "raw": "http://localhost:5000/api/admin/users/912f35fa-2b9b-4942-a042-d1f41d064bcf",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/admin/users/912f35fa-2b9b-4942-a042-d1f41d064bcf",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
-                "api",
                 "admin",
                 "users",
                 "912f35fa-2b9b-4942-a042-d1f41d064bcf"
@@ -538,14 +545,14 @@
               }
             },
             "url": {
-              "raw": "http://localhost:5000/api/reviews",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/reviews",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
-                "api",
                 "reviews"
               ]
             }
@@ -572,14 +579,14 @@
               }
             },
             "url": {
-              "raw": "http://localhost:5000/api/payments/create",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/payments/create",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
-                "api",
                 "payments",
                 "create"
               ]
@@ -593,14 +600,14 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:5000/api/payments/",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/payments/",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
-                "api",
                 "payments",
                 ""
               ]
@@ -614,14 +621,14 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:5000/api/payments/66f51936-a3ea-40da-bd29-1e8ed5907280",
-              "protocol": "http",
+              "raw": "https://rent-nest-delta.vercel.app/payments/66f51936-a3ea-40da-bd29-1e8ed5907280",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "rent-nest-delta",
+                "vercel",
+                "app"
               ],
-              "port": "5000",
               "path": [
-                "api",
                 "payments",
                 "66f51936-a3ea-40da-bd29-1e8ed5907280"
               ]
