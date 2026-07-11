@@ -20,13 +20,19 @@ const createReviewServices = async (payload: ICreateReviewPayload) => {
     where: {
       tenantId,
       propertyId,
-      status: PropertyRentRequestStatus.APPROVED,
+      // status: PropertyRentRequestStatus.APPROVED,
     },
   });
 
   if (!rentalRequest) {
     throw new AppError(
-      "You can only review properties you have successfully rented.",
+      "Rental request not found.",
+      StatusCodes.BAD_REQUEST,
+    );
+  }
+  if(rentalRequest.requestStatus !== "APPROVED"){
+    throw new AppError(
+      "You can only review properties you have successfully rented, after the landlord approval.",
       StatusCodes.BAD_REQUEST,
     );
   }
