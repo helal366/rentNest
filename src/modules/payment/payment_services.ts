@@ -6,13 +6,15 @@ import { sslCommerzInit } from "../../utils/sslcommerz/sslcommerz_init.js";
 import { findData } from "../../utils/sslcommerz/findData.js";
 import { createPaymentCheckValidity } from "../../utils/sslcommerz/createPaymentCheckValidity.js";
 import { validateSslPayment } from "../../utils/sslcommerz/ssl_commerz_ipn_validation.js";
+import { IConfirmPaymentPayload } from "./payment_interfaces.js";
+import { v4 as uuidv4 } from "uuid";
 
 const createPaymentServices = async (
   tenantId:string,
   rentalRequestId: string,
 ) => {
   await createPaymentCheckValidity(tenantId, rentalRequestId)
-  const {rentalRequest, property}= await findData(rentalRequestId)
+  // const {rentalRequest, property}= await findData(rentalRequestId)
 
   // sslcommerz init
   
@@ -42,8 +44,10 @@ const createPaymentServices = async (
   }
 };
 
-const confirmPaymentServices = async (payload: any) => {
-  const { tran_id, status, val_id, risk_title, card_type, amount, value_a, value_b, value_c } = payload;
+const confirmPaymentServices = async (payload: IConfirmPaymentPayload) => {
+  console.log({payload})
+  
+  const { tran_id, val_id, risk_title, card_type, amount, value_a, value_b, value_c, sessionkey } = payload;
 
   if (!tran_id) {
     throw new AppError("Transaction ID missing in webhook payload", StatusCodes.BAD_REQUEST);
@@ -52,8 +56,8 @@ const confirmPaymentServices = async (payload: any) => {
   // --- START OF IPN VALIDATION ---
   // Call the official SSLCommerz validation endpoint
   const verifiedData = await validateSslPayment(val_id);
-
-
+  console.log({verifiedData})
+  // throw new AppError("payload",StatusCodes.ACCEPTED)
   // Check if the validation server confirms the status as VALID or VALIDATED
   if (verifiedData.status !== "VALID" && verifiedData.status !== "VALIDATED") {
     throw new AppError("Payment validation failed at SSLCommerz", StatusCodes.PAYMENT_REQUIRED);
@@ -79,8 +83,8 @@ const confirmPaymentServices = async (payload: any) => {
   }
 
   /// If payment is successful
-  /// verifiedData.status === "VALID" || verifiedData.status === "VALIDATED"
-  if (status === "VALID" || status === "VALIDATED") {
+  const sslSessionIdUnique= `SESSION_COMPLETED-${uuidv4().substring(0, 8).toUpperCase()}`;
+  if (verifiedData.status === "VALID" || verifiedData.status === "VALIDATED") {
     return await prisma.$transaction(async (tx) => {
       
       // 1. Create the Payment row for the first time
@@ -92,7 +96,7 @@ const confirmPaymentServices = async (payload: any) => {
           landlordId: value_c,      // Extracted from custom value_c parameter
           amount: Number(amount),
           paymentStatus: "COMPLETED",
-          sslSessionId: payload.sessionkey || "SESSION_COMPLETED",
+          sslSessionId: payload.sessionkey || sslSessionIdUnique,
           sslValidationId: val_id,
           sslRiskTitle: risk_title,
           sslCardType: card_type,

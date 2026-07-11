@@ -333,6 +333,9 @@ const approveOrRejectRentalRequestServices = async (
       id: rentalRequestId,
     },
   });
+  if(rentalRequest.requestStatus === "APPROVED"){
+    throw new AppError("Property rent request already APPROVED.", StatusCodes.BAD_REQUEST)
+  }
   if (rentalRequest.landlordId !== landlordId) {
     throw new AppError(
       "You are not authorized for this request. Please send the property owner.",

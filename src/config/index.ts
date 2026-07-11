@@ -10,9 +10,10 @@ interface EnvVariables {
   JWT_REFRESH_EXPIRES_IN: string;
   BCRYPT_SALT_ROUND: string;
   APP_LOCAL_URL: string;
-  VERCEL_URL:string;
-  SSL_COMMERZ_Store_ID:string;
-  SSL_COMMERZ_Store_Password:string;
+  VERCEL_URL: string;
+  SSL_COMMERZ_STORE_ID: string;
+  SSL_COMMERZ_STORE_PASSWORD: string;
+  VALIDATION_IPN_URL: string;
 }
 const loadEnvVariables = (): EnvVariables => {
   const envVars: string[] = [
@@ -26,8 +27,9 @@ const loadEnvVariables = (): EnvVariables => {
     "JWT_REFRESH_EXPIRES_IN",
     "APP_LOCAL_URL",
     "VERCEL_URL",
-    "SSL_COMMERZ_Store_ID",
-    "SSL_COMMERZ_Store_Password"
+    "SSL_COMMERZ_STORE_ID",
+    "SSL_COMMERZ_STORE_PASSWORD",
+    "VALIDATION_IPN_URL",
   ];
   envVars.forEach((element) => {
     if (!process.env[element]) {
@@ -44,9 +46,11 @@ const loadEnvVariables = (): EnvVariables => {
     JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN as string,
     BCRYPT_SALT_ROUND: process.env.BCRYPT_SALT_ROUND as string,
     APP_LOCAL_URL: process.env.APP_LOCAL_URL as string,
-    VERCEL_URL:process.env.VERCEL_URL as string,
-    SSL_COMMERZ_Store_ID:process.env.SSL_COMMERZ_Store_ID as string,
-    SSL_COMMERZ_Store_Password:process.env.SSL_COMMERZ_Store_Password as string
+    VERCEL_URL: process.env.VERCEL_URL as string,
+    SSL_COMMERZ_STORE_ID: process.env.SSL_COMMERZ_STORE_ID as string,
+    SSL_COMMERZ_STORE_PASSWORD: process.env
+      .SSL_COMMERZ_STORE_PASSWORD as string,
+    VALIDATION_IPN_URL: process.env.VALIDATION_IPN_URL as string,
   };
 };
 export const envVars = loadEnvVariables();

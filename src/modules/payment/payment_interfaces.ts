@@ -22,3 +22,16 @@ export interface IUser {
   ownProperties?: Property[];
   requestsOwnProperty?: RentalRequest[];
 }
+
+export interface IConfirmPaymentPayload {
+  tran_id: string;
+  val_id: string;
+  risk_title: string;
+  card_type: string;
+  amount: number;
+  value_a: string;
+  value_b: string;
+  value_c: string;
+  sessionkey?: string
+}
+
