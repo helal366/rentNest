@@ -1,52 +1,27 @@
 import { StatusCodes } from "http-status-codes";
 import { prisma } from "../../lib/prisma.js";
 import { AppError } from "../../utils/globalErrorHelper.js";
-import { PropertyLocation } from "#db-client"; 
-
-type TPropertyFilters = {
-  location?: PropertyLocation;
-  minPrice?: number;
-  maxPrice?: number;
-  category?: string; // or category name
-};
+import { TPropertyFilters } from "./property_interfaces.js";
+import { queryValidationCheck } from "../../helperFunction/queryValidationCheck.js";
 const getAllPropertiesServices = async (filters: TPropertyFilters) => {
   const { location, minPrice, maxPrice, category } = filters;
+  const propertyCategoryId = await queryValidationCheck(filters)
   const whereConditions: any = {};
+  
   if (location) {
-    whereConditions.location = location;
+    whereConditions.location = location.toUpperCase();
   }
-  if (minPrice !== null || maxPrice !== null) {
-    if (maxPrice && minPrice) {
-      if (maxPrice < minPrice) {
-        throw new AppError(
-          "Max Price must greater than min price.",
-          StatusCodes.BAD_REQUEST,
-        );
-      }
+  if (minPrice !== undefined || maxPrice !== undefined) {
+    whereConditions.price={};
+    if (maxPrice !== undefined) {
+      whereConditions.price.lte= maxPrice
     }
-    whereConditions.AND = [];
-    if (maxPrice !== null) {
-      whereConditions.AND.push({
-        maxPrice: {
-          gte: maxPrice,
-        },
-      });
-    }
-    if (minPrice !== null) {
-      whereConditions.AND.push({
-        minPrice: {
-          lte: minPrice,
-        },
-      });
+    if (minPrice !== undefined) {
+      whereConditions.price.gte = minPrice
     }
   }
   if (category) {
-    const propertyCategory = await prisma.category.findUniqueOrThrow({
-      where: {
-        name: category,
-      },
-    });
-    whereConditions.propertyCategoryId = propertyCategory.id;
+    whereConditions.propertyCategoryId = propertyCategoryId;
   }
 
   const allProperties = await prisma.property.findMany({

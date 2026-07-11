@@ -30,7 +30,7 @@ const createPaymentController=catchAsync(async(req:Request, res:Response, next:N
 const confirmPaymentController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
     // SSLCommerz sends transactional status maps inside req.body
   const result = await paymentServices.confirmPaymentServices(req.body);
-  console.log("payload: ",req.body)
+  // console.log("payload: ",req.body)
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,

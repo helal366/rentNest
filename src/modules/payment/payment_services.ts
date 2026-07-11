@@ -45,7 +45,7 @@ const createPaymentServices = async (
 };
 
 const confirmPaymentServices = async (payload: IConfirmPaymentPayload) => {
-  console.log({payload})
+  // console.log({payload})
   
   const { tran_id, val_id, risk_title, card_type, amount, value_a, value_b, value_c, sessionkey } = payload;
 
@@ -56,7 +56,7 @@ const confirmPaymentServices = async (payload: IConfirmPaymentPayload) => {
   // --- START OF IPN VALIDATION ---
   // Call the official SSLCommerz validation endpoint
   const verifiedData = await validateSslPayment(val_id);
-  console.log({verifiedData})
+  // console.log({verifiedData})
   // throw new AppError("payload",StatusCodes.ACCEPTED)
   // Check if the validation server confirms the status as VALID or VALIDATED
   if (verifiedData.status !== "VALID" && verifiedData.status !== "VALIDATED") {

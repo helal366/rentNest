@@ -102,7 +102,7 @@ const authLoginServices = async (payload: ILoginUser) => {
       contactNo: true
     },
   });
-  console.log(user);
+  // console.log(user);
   userCheck(user);
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {

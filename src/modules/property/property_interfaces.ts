@@ -19,3 +19,9 @@ export interface IProperty {
   createdAt: Date;
   updatedAt: Date;
 }
+export type TPropertyFilters = {
+  location?: PropertyLocation;
+  minPrice?: number;
+  maxPrice?: number;
+  category?: string; // or category name
+};
