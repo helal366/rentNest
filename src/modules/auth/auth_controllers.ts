@@ -37,19 +37,14 @@ const getAuthMeController = catchAsync(async(req:Request, res:Response)=>{
     sendResponse(res, {
         success: true,
         statusCode: StatusCodes.OK,
-        message: "here is my user data",
+        message: "Here is my details.",
         data: result
     })
 });
 const refreshTokenController=catchAsync(async(req:Request, res:Response,next:NextFunction)=>{
     const refreshToken = req.cookies.refreshToken;
     const result = await authServices.refreshTokenServices(refreshToken);
-    // res.cookie("accessToken",accessToken,{
-    //     httpOnly:true,
-    //     secure:false,
-    //     sameSite:"none",
-    //     maxAge:1000*60*60*24*1 
-    // });
+  
     setAuthTokensInCookies(res, result)
     sendResponse(res, {
         success: true,

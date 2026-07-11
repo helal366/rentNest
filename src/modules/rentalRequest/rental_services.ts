@@ -36,6 +36,9 @@ const createRentalRequestServices = async (
       "You have already submitted a rental request for this property.",
       StatusCodes.BAD_REQUEST,
     );
+  };
+  if(property.rentStatus==="RENTED"){
+    throw new AppError("This is property is not available to rent.", StatusCodes.BAD_REQUEST)
   }
   const rentalRequest = await prisma.rentalRequest.create({
     data: {
