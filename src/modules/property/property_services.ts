@@ -12,12 +12,12 @@ const getAllPropertiesServices = async (filters: TPropertyFilters) => {
     whereConditions.location = location.toUpperCase();
   }
   if (minPrice !== undefined || maxPrice !== undefined) {
-    whereConditions.price={};
+    whereConditions.rentPrice={};
     if (maxPrice !== undefined) {
-      whereConditions.price.lte= maxPrice
+      whereConditions.rentPrice.lte= Number(maxPrice)
     }
     if (minPrice !== undefined) {
-      whereConditions.price.gte = minPrice
+      whereConditions.rentPrice.gte = Number(minPrice)
     }
   }
   if (category) {
