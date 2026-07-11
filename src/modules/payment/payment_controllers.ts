@@ -55,11 +55,11 @@ const getPaymentHistoryController=catchAsync(async(req:Request, res:Response, ne
 const getPaymentHistorByIdyController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
      if (!req.user) throw new AppError("Please login.", StatusCodes.UNAUTHORIZED);
 
-  const { id } = req.params;
-  if(!id){
+  const PaymentId  = req.params?.id;
+  if(!PaymentId){
     throw new AppError("Payment id is required.",StatusCodes.BAD_REQUEST)
   }
-  const result = await paymentServices.getPaymentDetailsByIdServices(id as string, req.user.id, req.user.role);
+  const result = await paymentServices.getPaymentDetailsByIdServices(PaymentId as string, req.user.id, req.user.role);
 
   sendResponse(res, {
     success: true,
