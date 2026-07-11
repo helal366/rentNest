@@ -17,7 +17,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"name\": \"samir13\",\r\n    \"email\": \"samir13@gmail.com\",\r\n    \"role\": \"LANDLORD\",\r\n    \"password\": \"123456\",\r\n    \"address\":\"DHAKA\",\r\n    \"contactNo\":\"01788555999\"\r\n}",
+              "raw": "{\r\n    \"name\": \"samir19\",\r\n    \"email\": \"samir19@gmail.com\",\r\n    \"role\": \"LANDLORD\",\r\n    \"password\": \"123456\",\r\n    \"address\":\"DHAKA\",\r\n    \"contactNo\":\"01788555989\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -195,7 +195,7 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "http://localhost:5000/api/landlord/properties/748fb80c-cc16-4845-850b-ed71ffa6df82",
+              "raw": "http://localhost:5000/api/landlord/properties/08b62407-e169-47fb-af91-162429ff1d38",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -205,7 +205,7 @@
                 "api",
                 "landlord",
                 "properties",
-                "748fb80c-cc16-4845-850b-ed71ffa6df82"
+                "08b62407-e169-47fb-af91-162429ff1d38"
               ]
             }
           },
@@ -247,7 +247,7 @@
               }
             },
             "url": {
-              "raw": "http://localhost:5000/api/landlord/requests/02c2fcfd-79eb-4a13-b160-d7b03d9dcc97",
+              "raw": "http://localhost:5000/api/landlord/requests/6c89c174-27a9-46c2-ae4d-2841fbf194e4",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -257,7 +257,7 @@
                 "api",
                 "landlord",
                 "requests",
-                "02c2fcfd-79eb-4a13-b160-d7b03d9dcc97"
+                "6c89c174-27a9-46c2-ae4d-2841fbf194e4"
               ]
             }
           },
@@ -322,7 +322,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"propertyId\": \"08b62407-e169-47fb-af91-162429ff1d38\",\r\n    \"landlordId\" : \"f0ec1caf-ddaf-43c7-b3e5-dc24f8cc9f78\"\r\n}",
+              "raw": "{\r\n    \"propertyId\": \"3c540983-025c-4561-a8a4-0ac1570ae95c\",\r\n    \"landlordId\" : \"383418a8-fd81-43a8-bb79-75ad9f029e8b\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -358,7 +358,7 @@
               "raw": "{\r\n    \"propertyId\": \"3f101891-b676-4a11-b88b-2c4748fb8041\",\r\n    \"landlordId\" : \"f0ec1caf-ddaf-43c7-b3e5-dc24f8cc9f78\"\r\n}"
             },
             "url": {
-              "raw": "http://localhost:5000/api/rentals/02c2fcfd-79eb-4a13-b160-d7b03d9dcc97",
+              "raw": "http://localhost:5000/api/rentals/6c89c174-27a9-46c2-ae4d-2841fbf194e4",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -367,7 +367,7 @@
               "path": [
                 "api",
                 "rentals",
-                "02c2fcfd-79eb-4a13-b160-d7b03d9dcc97"
+                "6c89c174-27a9-46c2-ae4d-2841fbf194e4"
               ]
             }
           },
@@ -492,8 +492,17 @@
           "request": {
             "method": "PATCH",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"userStatus\":\"BANNED\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
-              "raw": "http://localhost:5000/api/admin/users/f2611e10-bd7c-452f-902f-62f33b19e40d",
+              "raw": "http://localhost:5000/api/admin/users/912f35fa-2b9b-4942-a042-d1f41d064bcf",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -503,7 +512,7 @@
                 "api",
                 "admin",
                 "users",
-                "f2611e10-bd7c-452f-902f-62f33b19e40d"
+                "912f35fa-2b9b-4942-a042-d1f41d064bcf"
               ]
             }
           },
@@ -519,6 +528,15 @@
           "request": {
             "method": "POST",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"propertyId\": \"3c540983-025c-4561-a8a4-0ac1570ae95c\",\r\n      \"content\": \"Beautiful one\",\r\n      \"rating\": 5\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
               "raw": "http://localhost:5000/api/reviews",
               "protocol": "http",
@@ -564,6 +582,48 @@
                 "api",
                 "payments",
                 "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Payment history",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/payments/",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "payments",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payment Details By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/payments/66f51936-a3ea-40da-bd29-1e8ed5907280",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "payments",
+                "66f51936-a3ea-40da-bd29-1e8ed5907280"
               ]
             }
           },
