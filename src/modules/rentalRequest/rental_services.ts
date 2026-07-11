@@ -3,6 +3,7 @@ import { prisma } from "../../lib/prisma.js";
 import { AppError } from "../../utils/globalErrorHelper.js";
 import { ICreateRentalRequestPayload, IGetRentalRequestByIdPayload } from "./rental_interfaces.js";
 import { Role } from "#db-client"; 
+import { authGetRentalRequestsByUser } from "../../helperFunction/authGetRentalRequestsByUser.js";
 
 const createRentalRequestServices = async (
   payload: ICreateRentalRequestPayload,
@@ -46,43 +47,79 @@ const createRentalRequestServices = async (
   return rentalRequest;
 };
 
-const getRentalRequestsByTenantServices = async (
-  tenantId: string,
-  tenantRole: Role,
+const getRentalRequestsByTenantOrLandlordServices = async (
+  userId: string,
+  userRole: Role,
 ) => {
-  if (tenantRole !== Role.TENANT) {
-    throw new AppError("Please login as TENANT", StatusCodes.FORBIDDEN);
+  if (userRole !== Role.TENANT && userRole !== Role.LANDLORD) {
+    throw new AppError("Please login as TENANT or LANDLORD", StatusCodes.FORBIDDEN);
   }
-  const rentalRequests = await prisma.rentalRequest.findMany({
-    where: { tenantId },
-    include: {
-      rentalRequestProperty: {
-        select: {
-          id: true,
-          rentStatus: true,
-          approvedTenant: {
-            select: {
-              name: true,
-              email: true,
-            },
-          },
-          location: true,
-          areaInSqFt: true,
-          amenities: true,
-        },
-      },
-      landlord: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  // let rentalRequests:any;
+  // if(userRole===Role.TENANT){
+  //    rentalRequests = await prisma.rentalRequest.findMany({
+  //     where: { tenantId:userId },
+  //     include: {
+  //       rentalRequestProperty: {
+  //         select: {
+  //           id: true,
+  //           rentStatus: true,
+  //           approvedTenant: {
+  //             select: {
+  //               name: true,
+  //               email: true,
+  //             },
+  //           },
+  //           location: true,
+  //           areaInSqFt: true,
+  //           amenities: true,
+  //         },
+  //       },
+  //       landlord: {
+  //         select: {
+  //           id: true,
+  //           name: true,
+  //           email: true,
+  //         },
+  //       },
+  //     },
+  //     orderBy: {
+  //       createdAt: "desc",
+  //     },
+  //   });
+  // }
+  // if(userRole===Role.LANDLORD){
+  //   rentalRequests = await prisma.rentalRequest.findMany({
+  //     where: { landlordId:userId },
+  //     include: {
+  //       rentalRequestProperty: {
+  //         select: {
+  //           id: true,
+  //           rentStatus: true,
+  //           approvedTenant: {
+  //             select: {
+  //               name: true,
+  //               email: true,
+  //             },
+  //           },
+  //           location: true,
+  //           areaInSqFt: true,
+  //           amenities: true,
+  //         },
+  //       },
+  //       landlord: {
+  //         select: {
+  //           id: true,
+  //           name: true,
+  //           email: true,
+  //         },
+  //       },
+  //     },
+  //     orderBy: {
+  //       createdAt: "desc",
+  //     },
+  //   });
+  // }
+  const rentalRequests=authGetRentalRequestsByUser(userId, userRole)
   return rentalRequests;
 };
 
@@ -140,6 +177,6 @@ const getRentalRequestByIdServices = async (
 
 export const rentalRequestServices = {
   createRentalRequestServices,
-  getRentalRequestsByTenantServices,
+  getRentalRequestsByTenantOrLandlordServices,
   getRentalRequestByIdServices,
 };

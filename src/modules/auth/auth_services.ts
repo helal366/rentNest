@@ -7,7 +7,7 @@ import { envVars } from "../../config/index.js";
 import { userCheck } from "../../utils/userCheck.js";
 import { JwtPayload, SignOptions } from "jsonwebtoken";
 import { jwtTokens } from "../../utils/jwtTokens.js";
-import { Role, UserStatus } from "#db-client"; 
+import { Role, UserStatus } from "#db-client";
 
 const authRegisterServices = async (payload: IRegisterUser) => {
   const { name, email, role, password, address, contactNo } = payload;
@@ -26,7 +26,7 @@ const authRegisterServices = async (payload: IRegisterUser) => {
   }
   const userExist = await prisma.user.findUnique({
     where: {
-      email
+      email,
     },
   });
   if (userExist) {
@@ -40,20 +40,20 @@ const authRegisterServices = async (payload: IRegisterUser) => {
     Number(envVars.BCRYPT_SALT_ROUND),
   );
   const upperAddress = address
-  .trim()
-  .toLowerCase()
-  .replace(/\b\w/g, (char) => char.toUpperCase());
+    .trim()
+    .toLowerCase()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
 
   // Validate Bangladeshi Contact Number (Starts with 01 or 09, exactly 11 digits)
-const bdPhoneRegex = /^(01|09)\d{9}$/;
-const cleanContactNo = contactNo.trim();
+  const bdPhoneRegex = /^(01|09)\d{9}$/;
+  const cleanContactNo = contactNo.trim();
 
-if (!bdPhoneRegex.test(cleanContactNo)) {
-  throw new AppError(
-    "Invalid contact number. Must be a valid 11-digit Bangladeshi number starting with 01 or 09.",
-    StatusCodes.BAD_REQUEST
-  );
-}
+  if (!bdPhoneRegex.test(cleanContactNo)) {
+    throw new AppError(
+      "Invalid contact number. Must be a valid 11-digit Bangladeshi number starting with 01 or 09.",
+      StatusCodes.BAD_REQUEST,
+    );
+  }
 
   const user = await prisma.user.create({
     data: {
@@ -61,8 +61,8 @@ if (!bdPhoneRegex.test(cleanContactNo)) {
       email,
       password: hashedPassword,
       role,
-      address:upperAddress,
-      contactNo:cleanContactNo
+      address: upperAddress,
+      contactNo: cleanContactNo,
     },
     select: {
       id: true,
@@ -73,8 +73,8 @@ if (!bdPhoneRegex.test(cleanContactNo)) {
       contactNo: true,
       userStatus: true,
       createdAt: true,
-      updatedAt: true
-    }
+      updatedAt: true,
+    },
   });
 
   return { user };
@@ -87,7 +87,7 @@ const authLoginServices = async (payload: ILoginUser) => {
       throw new AppError(`${key} is not provided`, StatusCodes.BAD_REQUEST);
     }
   }
-  const user = await prisma.user.findUniqueOrThrow({
+  const user = await prisma.user.findUnique({
     where: {
       email,
     },
@@ -99,9 +99,15 @@ const authLoginServices = async (payload: ILoginUser) => {
       password: true,
       userStatus: true,
       address: true,
-      contactNo: true
+      contactNo: true,
     },
   });
+  if (!user) {
+    throw new AppError(
+      "No user found with these credentials",
+      StatusCodes.NOT_FOUND,
+    );
+  }
   // console.log(user);
   userCheck(user);
   const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -168,7 +174,7 @@ const refreshTokenServices = async (refreshToken: string) => {
     role: user.role,
     userStatus: user.userStatus,
     address: user.address,
-    contactNo: user.contactNo
+    contactNo: user.contactNo,
   };
   const accessToken = jwtTokens.createToken(
     jwtPayload,

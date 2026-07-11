@@ -4,6 +4,7 @@ import { AppError } from "../../utils/globalErrorHelper.js";
 import { StatusCodes } from "http-status-codes";
 import { rentalRequestServices } from "./rental_services.js";
 import { sendResponse } from "../../utils/sendResponse.js";
+import { Role } from "#db-client";
 
 const createRentalRequestController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
     const {propertyId, landlordId} = req.body;
@@ -24,17 +25,20 @@ const createRentalRequestController=catchAsync(async(req:Request, res:Response, 
         data: result
     })
 });
-const getRentalRequestsByTenantController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
+const getRentalRequestsByTenantOrLandlordController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
     if(!req.user){
         throw new AppError("Please login",StatusCodes.UNAUTHORIZED)
     };
-    const tenantId = req.user.id;
-    const tenantRole = req.user.role;
-    const result =await rentalRequestServices.getRentalRequestsByTenantServices(tenantId,tenantRole);
+    const userId = req.user.id;
+    const userRole = req.user.role;
+    const result =await rentalRequestServices.getRentalRequestsByTenantOrLandlordServices(userId,userRole);
+    const message = req.user.role === Role.TENANT 
+  ? "Tenant rental requests retrieved successfully." 
+  : "Landlord rental requests retrieved successfully.";
     sendResponse(res, {
         success: true,
         statusCode: StatusCodes.OK,
-        message: "Tenant rental requests retrieved successfully.",
+        message,
         data: result
     })
 });
@@ -61,6 +65,6 @@ const getRentalRequestByIdController=catchAsync(async(req:Request, res:Response,
 })
 export const rentalRequestControllers= {
     createRentalRequestController,
-    getRentalRequestsByTenantController,
+    getRentalRequestsByTenantOrLandlordController,
     getRentalRequestByIdController
 }

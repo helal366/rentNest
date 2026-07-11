@@ -4,7 +4,7 @@ import { userAuth } from "../../middlewares/userAuth.js";
 import { Role } from "#db-client"; 
 
 export const authRouter: Router = Router();
-authRouter.post("/register", authControllers.authRegisterController);
+authRouter.post("/register", userAuth(Role.TENANT, Role.LANDLORD), authControllers.authRegisterController);
 authRouter.post("/login", authControllers.authLoginController);
 authRouter.get(
   "/me",

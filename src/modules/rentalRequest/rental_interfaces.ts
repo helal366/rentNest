@@ -1,4 +1,4 @@
-import { Role } from "#db-client"; 
+import { Prisma, PropertyRentRequestStatus, Role } from "#db-client"; 
 
 
 export interface ICreateRentalRequestPayload {
@@ -13,3 +13,30 @@ export interface IGetRentalRequestByIdPayload {
   userId: string;
   userRole: Role;
 }
+
+export type RentalRequestWithRelations = Prisma.RentalRequestGetPayload<{
+  include: {
+    rentalRequestProperty: {
+      select: {
+        id: true;
+        rentStatus: true;
+        approvedTenant: {
+          select: {
+            name: true;
+            email: true;
+          };
+        };
+        location: true;
+        areaInSqFt: true;
+        amenities: true;
+      };
+    };
+    landlord: {
+      select: {
+        id: true;
+        name: true;
+        email: true;
+      };
+    };
+  };
+}>;
