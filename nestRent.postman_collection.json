@@ -233,7 +233,7 @@
           "response": []
         },
         {
-          "name": "Approve or Reject Rental Request",
+          "name": "Approve And Reject Rental Request",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -346,7 +346,7 @@
           "response": []
         },
         {
-          "name": "Get Tenant Rental Requests",
+          "name": "Get Rental Requests By Id",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
           },
@@ -368,6 +368,27 @@
                 "api",
                 "rentals",
                 "02c2fcfd-79eb-4a13-b160-d7b03d9dcc97"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rental Requests For Tenant Or Landlord",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/rentals/",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "rentals",
+                ""
               ]
             }
           },
@@ -428,7 +449,20 @@
           "name": "Get All Properties",
           "request": {
             "method": "GET",
-            "header": []
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/admin/properties",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "admin",
+                "properties"
+              ]
+            }
           },
           "response": []
         },
@@ -512,7 +546,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"rentalRequestId\":\"02c2fcfd-79eb-4a13-b160-d7b03d9dcc97\",\r\n}",
+              "raw": "{\r\n    \"rentalRequestId\":\"6c89c174-27a9-46c2-ae4d-2841fbf194e4\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
