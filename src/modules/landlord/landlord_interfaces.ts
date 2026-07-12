@@ -1,4 +1,4 @@
-import { Prisma } from "#db-client"; 
+import { Prisma, PropertyRentRequestStatus } from "#db-client"; 
 import { PropertyAmenity, PropertyLocation, RentStatus, Role } from "#db-client"; 
 
 
@@ -51,4 +51,5 @@ export interface IApproveRejectRentRequestPayload {
   rentalRequestId: string;
   landlordId: string;
   landlordRole: Role;
+  requestStatus: PropertyRentRequestStatus
 }

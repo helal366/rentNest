@@ -57,71 +57,7 @@ const getRentalRequestsByTenantOrLandlordServices = async (
   if (userRole !== Role.TENANT && userRole !== Role.LANDLORD) {
     throw new AppError("Please login as TENANT or LANDLORD", StatusCodes.FORBIDDEN);
   }
-  // let rentalRequests:any;
-  // if(userRole===Role.TENANT){
-  //    rentalRequests = await prisma.rentalRequest.findMany({
-  //     where: { tenantId:userId },
-  //     include: {
-  //       rentalRequestProperty: {
-  //         select: {
-  //           id: true,
-  //           rentStatus: true,
-  //           approvedTenant: {
-  //             select: {
-  //               name: true,
-  //               email: true,
-  //             },
-  //           },
-  //           location: true,
-  //           areaInSqFt: true,
-  //           amenities: true,
-  //         },
-  //       },
-  //       landlord: {
-  //         select: {
-  //           id: true,
-  //           name: true,
-  //           email: true,
-  //         },
-  //       },
-  //     },
-  //     orderBy: {
-  //       createdAt: "desc",
-  //     },
-  //   });
-  // }
-  // if(userRole===Role.LANDLORD){
-  //   rentalRequests = await prisma.rentalRequest.findMany({
-  //     where: { landlordId:userId },
-  //     include: {
-  //       rentalRequestProperty: {
-  //         select: {
-  //           id: true,
-  //           rentStatus: true,
-  //           approvedTenant: {
-  //             select: {
-  //               name: true,
-  //               email: true,
-  //             },
-  //           },
-  //           location: true,
-  //           areaInSqFt: true,
-  //           amenities: true,
-  //         },
-  //       },
-  //       landlord: {
-  //         select: {
-  //           id: true,
-  //           name: true,
-  //           email: true,
-  //         },
-  //       },
-  //     },
-  //     orderBy: {
-  //       createdAt: "desc",
-  //     },
-  //   });
-  // }
+
   const rentalRequests=authGetRentalRequestsByUser(userId, userRole)
   return rentalRequests;
 };

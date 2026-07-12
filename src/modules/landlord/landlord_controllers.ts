@@ -73,17 +73,23 @@ const getRentalRequestsByLandlordController=catchAsync(async(req:Request, res:Re
 });
 
 const approveOrRejectRentalRequestController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
+      if(!req.user){
+         throw new AppError("Please login", StatusCodes.UNAUTHORIZED);
+    };
     const rentalRequestId = req.params.id;
     if(!rentalRequestId || typeof rentalRequestId !=="string"){
         throw new AppError("Rental request id is required as string.", StatusCodes.BAD_REQUEST)
     };
-    if(!req.user){
-         throw new AppError("Please login", StatusCodes.UNAUTHORIZED);
-    };
+    const {requestStatus}=req.body;
+    if(!requestStatus){
+        throw new AppError("Required requestStatus from body as PENDING or APPROVED or REJECTED",StatusCodes.BAD_REQUEST)
+    }
+  
     const payload={
         rentalRequestId,
         landlordId:req.user.id,
-        landlordRole: req.user.role
+        landlordRole: req.user.role,
+        requestStatus
     }
     const result = await landlordServices.approveOrRejectRentalRequestServices(payload)
     sendResponse(res, {

@@ -9,8 +9,13 @@ import {
 import { prisma } from "../../lib/prisma.js";
 import { validateAmenities } from "../../helperFunction/amenitiesValidityCheck.js";
 import { validateLocation } from "../../helperFunction/locationValidityCheck.js";
-import { PropertyLocation, PropertyRentRequestStatus, RentStatus, Role } from "#db-client"; 
-import { Prisma } from "#db-client"; 
+import {
+  PropertyLocation,
+  PropertyRentRequestStatus,
+  RentStatus,
+  Role,
+} from "#db-client";
+import { Prisma } from "#db-client";
 
 const creatPropertyServices = async (
   payload: ICreatePropertyPayload,
@@ -321,63 +326,199 @@ const getRentalRequestsByLandlordServices = async (
 const approveOrRejectRentalRequestServices = async (
   payload: IApproveRejectRentRequestPayload,
 ) => {
-  const { rentalRequestId, landlordId, landlordRole } = payload;
+  const { rentalRequestId, landlordId, landlordRole, requestStatus } = payload;
+  
   if (landlordRole !== Role.LANDLORD) {
     throw new AppError(
       "Unauthorized Access. Please login as LANDLORD",
       StatusCodes.UNAUTHORIZED,
     );
   }
-  const rentalRequest = await prisma.rentalRequest.findUniqueOrThrow({
-    where: {
-      id: rentalRequestId,
-    },
-  });
-  if(rentalRequest.requestStatus === "APPROVED"){
-    throw new AppError("Property rent request already APPROVED.", StatusCodes.BAD_REQUEST)
+
+  const requestStatusUpper = requestStatus.toUpperCase();
+  const validRequestStatuses = ["PENDING", "APPROVED", "REJECTED"];
+  
+  if (!validRequestStatuses.includes(requestStatusUpper)) {
+    throw new AppError(
+      `Invalid request Status. Please send PENDING, APPROVED, or REJECTED.`,
+      StatusCodes.BAD_REQUEST
+    );
   }
+
+  const rentalRequest = await prisma.rentalRequest.findUniqueOrThrow({
+    where: { id: rentalRequestId },
+  });
+
   if (rentalRequest.landlordId !== landlordId) {
     throw new AppError(
-      "You are not authorized for this request. Please send the property owner.",
+      "Unauthorized Access. Please send the property owner.",
       StatusCodes.FORBIDDEN,
     );
   }
+
+  if (rentalRequest.requestStatus === requestStatusUpper) {
+    throw new AppError(
+      `Already updated to your desired status as ${requestStatusUpper}`,
+      StatusCodes.CONFLICT
+    );
+  }
+
   const propertyId = rentalRequest.propertyId;
-  await prisma.$transaction(async (tx) => {
-    await tx.rentalRequest.update({
+
+  // ==========================================
+  // LOGIC FOR UPDATING STATUS TO PENDING
+  // ==========================================
+  if (requestStatusUpper === PropertyRentRequestStatus.PENDING) {
+    
+    // Scenario A: Request is currently APPROVED
+    if (rentalRequest.requestStatus === PropertyRentRequestStatus.APPROVED) {
+      if (rentalRequest.isPaid) {
+        throw new AppError(
+          "Cannot change status to PENDING. Payment has already been completed for this approval.",
+          StatusCodes.BAD_REQUEST
+        );
+      }
+
+      // If approved but unpaid, revert this request, restore others, and free up the property
+      await prisma.$transaction(async (tx) => {
+        await tx.rentalRequest.updateMany({
+          where: { propertyId},
+          data: { requestStatus: PropertyRentRequestStatus.PENDING },
+        });
+
+        await tx.property.update({
+          where: { id: propertyId },
+          data: {
+            approvedTenantId: null,
+            rentStatus: RentStatus.AVAILABLE,
+          },
+        });
+      });
+
+      return { message: "Rental request and all sister requests restored to PENDING successfully" };
+    }
+
+    // Scenario B: Request is currently REJECTED
+    if (rentalRequest.requestStatus === PropertyRentRequestStatus.REJECTED) {
+      // Find if there is ANY approved request for this property
+      const approvedRequest = await prisma.rentalRequest.findFirst({
+        where: {
+          propertyId,
+          requestStatus: PropertyRentRequestStatus.APPROVED,
+        },
+      });
+
+      if (approvedRequest) {
+        if (approvedRequest.isPaid) {
+          throw new AppError(
+            "Cannot revert to PENDING. Another tenant has already approved and paid for this property.",
+            StatusCodes.BAD_REQUEST
+          );
+        }
+
+        // If another request is approved but unpaid, reset the entire property ecosystem back to PENDING
+        await prisma.$transaction(async (tx) => {
+          await tx.rentalRequest.updateMany({
+            where: { propertyId },
+            data: { requestStatus: PropertyRentRequestStatus.PENDING },
+          });
+
+          await tx.property.update({
+            where: { id: propertyId },
+            data: {
+              approvedTenantId: null,
+              rentStatus: RentStatus.AVAILABLE,
+            },
+          });
+        });
+
+        return { message: "All property requests reset to PENDING because the prior approval was unpaid" };
+      }
+
+      // If no other request was approved, just move this standalone rejected request to pending
+      await prisma.rentalRequest.update({
+        where: { id: rentalRequestId },
+        data: { requestStatus: PropertyRentRequestStatus.PENDING },
+      });
+
+      return { message: "Rental request status updated to PENDING successfully" };
+    }
+  }
+
+  // ==========================================
+  // LOGIC FOR UPDATING STATUS TO APPROVED
+  // ==========================================
+  if (requestStatusUpper === PropertyRentRequestStatus.APPROVED) {
+     const existingPaidRequest = await prisma.rentalRequest.findFirst({
       where: {
-        id: rentalRequestId,
-      },
-      data: {
+        propertyId,
         requestStatus: PropertyRentRequestStatus.APPROVED,
       },
     });
+    if(existingPaidRequest){
 
-    await tx.rentalRequest.updateMany({
-      where: {
-        propertyId,
-        NOT: {
-          id: rentalRequestId,
+      if (existingPaidRequest?.isPaid) {
+        throw new AppError(
+          "Cannot approve this request. This property has already been leased out and paid for by another tenant.",
+          StatusCodes.CONFLICT
+        );
+      }
+    }
+    await prisma.$transaction(async (tx) => {
+      await tx.rentalRequest.update({
+        where: { id: rentalRequestId },
+        data: { requestStatus: PropertyRentRequestStatus.APPROVED },
+      });
+  
+      await tx.rentalRequest.updateMany({
+        where: {
+          propertyId,
+          NOT: { id: rentalRequestId },
         },
-      },
-      data: {
-        requestStatus: PropertyRentRequestStatus.REJECTED,
-      },
+        data: { requestStatus: PropertyRentRequestStatus.REJECTED },
+      });
+  
+      await tx.property.update({
+        where: { id: propertyId },
+        data: {
+          approvedTenantId: rentalRequest.tenantId,
+          rentStatus: RentStatus.RENTED,
+        },
+      });
     });
 
-    await tx.property.update({
-      where: { id: propertyId },
-      data: {
-        approvedTenantId: rentalRequest.tenantId,
-        rentStatus: RentStatus.RENTED,
-      },
+    return { message: "Rental request approved and others rejected successfully" };
+  }
+
+  // ==========================================
+  // LOGIC FOR UPDATING STATUS TO REJECTED
+  // ==========================================
+  if (requestStatusUpper === PropertyRentRequestStatus.REJECTED) {
+     // Scenario 1: Present status is APPROVED and isPaid is true -> NO UPDATE
+    if (rentalRequest.requestStatus === PropertyRentRequestStatus.APPROVED && rentalRequest.isPaid) {
+      throw new AppError(
+        "Cannot reject this request. The tenant has already completed the payment process for this approved lease.",
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    await prisma.$transaction(async (tx) => {
+    await prisma.rentalRequest.update({
+      where: { id: rentalRequestId },
+      data: { requestStatus: PropertyRentRequestStatus.REJECTED },
     });
+     await tx.property.update({
+          where: { id: propertyId },
+          data: {
+            approvedTenantId: null,
+            rentStatus: RentStatus.AVAILABLE,
+          },
+        });
   });
-
-  return {
-    message: "Rental request approved and others rejected successfully",
-  };
+  }
+   return { message: "Rental request rejected and property availability restored successfully." };
 };
+
 export const landlordServices = {
   creatPropertyServices,
   updatePropertyServices,
