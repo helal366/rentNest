@@ -7,7 +7,6 @@ import { envVars } from "../../config/index.js";
 import { JwtPayload, SignOptions } from "jsonwebtoken";
 import { jwtTokens } from "../../utils/jwtTokens.js";
 import { Role, UserStatus } from "#db-client";
-import { bannedCheck } from "../../utils/bannedCheck.js";
 
 const authRegisterServices = async (payload: IRegisterUser) => {
   const { name, email, role, password, address, contactNo } = payload;
@@ -146,9 +145,6 @@ const getAuthMeServices = async (userId: string) => {
       password: true,
     },
   });
-  if(user.userStatus===UserStatus.BANNED){
-        throw new AppError(`This ${user.role} is BANNED`, StatusCodes.FORBIDDEN)
-    }
   return {
     user,
   };

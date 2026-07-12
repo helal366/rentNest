@@ -13,7 +13,7 @@ const creatPropertyController = catchAsync(
     if (!req.user) {
       throw new AppError("Please login", StatusCodes.UNAUTHORIZED);
     }
-    userCheck(req.user);
+    // userCheck(req.user);
     const userId = req.user?.id;
     const result = await landlordServices.creatPropertyServices(
       payload,
@@ -36,7 +36,7 @@ const updatePropertyController = catchAsync(
     if (!req.user) {
       throw new AppError("Please login", StatusCodes.UNAUTHORIZED);
     }
-    userCheck(req.user);
+    // userCheck(req.user);
     const userId = req.user?.id;
     const userRole = req.user?.role;
     const payload = req.body;
@@ -63,7 +63,7 @@ const deletePropertyController = catchAsync(
     if (!req.user) {
       throw new AppError("Please login", StatusCodes.UNAUTHORIZED);
     }
-    userCheck(req.user);
+    // userCheck(req.user);
     const userId = req.user?.id;
     const userRole = req.user?.role;
     const result = await landlordServices.deletePropertyServices(
@@ -84,7 +84,7 @@ const getRentalRequestsByLandlordController = catchAsync(
     if (!req.user) {
       throw new AppError("Please login", StatusCodes.UNAUTHORIZED);
     };
-    userCheck(req.user);
+    // userCheck(req.user);
     const landlordId = req.user.id;
     const landlordRole = req.user.role;
     const result = await landlordServices.getRentalRequestsByLandlordServices(
@@ -105,7 +105,7 @@ const approveOrRejectRentalRequestController = catchAsync(
     if (!req.user) {
       throw new AppError("Please login", StatusCodes.UNAUTHORIZED);
     };
-    userCheck(req.user);
+    // userCheck(req.user);
     const rentalRequestId = req.params.id;
     if (!rentalRequestId || typeof rentalRequestId !== "string") {
       throw new AppError(

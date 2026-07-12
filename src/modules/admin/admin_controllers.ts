@@ -7,7 +7,7 @@ import { AppError } from "../../utils/globalErrorHelper.js";
 import { userCheck } from "../../utils/userCheck.js";
 
 const getAllUsersController=catchAsync(async(req: Request, res: Response, next: NextFunction)=>{
-    userCheck(req.user);
+    // userCheck(req.user);
     const result = await adminServices.getAllUsersServices();
     sendResponse(res, {
         success: true,
@@ -18,7 +18,7 @@ const getAllUsersController=catchAsync(async(req: Request, res: Response, next: 
 });
 
 const getAllPropertiesController=catchAsync(async(req: Request, res: Response, next: NextFunction)=>{
-    userCheck(req.user);
+    // userCheck(req.user);
     const result = await adminServices.getAllPropertiesServices();
     sendResponse(res, {
         success: true,
@@ -29,7 +29,7 @@ const getAllPropertiesController=catchAsync(async(req: Request, res: Response, n
 });
 
 const getAllRentalRequestsController=catchAsync(async(req: Request, res: Response, next: NextFunction)=>{
-    userCheck(req.user);
+    // userCheck(req.user);
     const result = await adminServices.getAllRentalRequestsServices();
     sendResponse(res, {
         success: true,
@@ -40,7 +40,7 @@ const getAllRentalRequestsController=catchAsync(async(req: Request, res: Respons
 });
 
 const updateUserBanUnbanController=catchAsync(async(req: Request, res: Response, next: NextFunction)=>{
-    userCheck(req.user);
+    // userCheck(req.user);
     const userId=req.params.id;
     if(!userId || typeof userId !== "string"){
         throw new AppError("User id is required as string.", StatusCodes.BAD_REQUEST)
