@@ -32,7 +32,13 @@ const createReviewServices = async (payload: ICreateReviewPayload) => {
   }
   if(rentalRequest.requestStatus !== "APPROVED"){
     throw new AppError(
-      "You can only review properties you have successfully rented, after the landlord approval.",
+      "You can only review properties after the landlord approval and successful payment.",
+      StatusCodes.BAD_REQUEST,
+    );
+  }
+  if(rentalRequest.requestStatus === "APPROVED" && !rentalRequest.isPaid){
+    throw new AppError(
+      "You can only review properties after the landlord approval and successful payment.",
       StatusCodes.BAD_REQUEST,
     );
   }
@@ -74,6 +80,14 @@ const createReviewServices = async (payload: ICreateReviewPayload) => {
 
   return review;
 };
+const deleteReviewServices= async(reviewId:string)=>{
+  // await prisma.review.delete({
+  //   where:{
+  //     id: reviewId
+  //   }
+  // })
+}
 export const reviewServices = {
   createReviewServices,
+  deleteReviewServices
 };

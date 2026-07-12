@@ -9,3 +9,4 @@ reviewRouter.post(
   userAuth(Role.TENANT),
   reviewControllers.createReviewController,
 );
+reviewRouter.delete("/:id", userAuth(Role.ADMIN), reviewControllers.deleteReviewcontroller)

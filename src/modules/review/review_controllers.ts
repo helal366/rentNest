@@ -4,14 +4,12 @@ import { AppError } from "../../utils/globalErrorHelper.js";
 import { StatusCodes } from "http-status-codes";
 import { reviewServices } from "./review_services.js";
 import { sendResponse } from "../../utils/sendResponse.js";
-import { userCheck } from "../../utils/userCheck.js";
 
 const createReviewController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     if(!req.user){
         throw new AppError("Please login", StatusCodes.UNAUTHORIZED)
     }
-    userCheck(req.user)
     const payload = {
       tenantId: req.user.id,
       tenantRole: req.user.role,
@@ -29,6 +27,21 @@ const createReviewController = catchAsync(
         })
   }
 );
+
+const deleteReviewcontroller= catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
+  const reviewId = req.params.id;
+  if(!reviewId){
+    throw new AppError(`Review id is required.`,StatusCodes.NOT_FOUND)
+  };
+  // await reviewServices.deleteReviewServices(reviewId as string)
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "Review deleted successfully.",
+    data: reviewId
+  })
+});
 export const reviewControllers = {
   createReviewController,
+  deleteReviewcontroller
 };
