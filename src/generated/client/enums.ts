@@ -26,15 +26,6 @@ export const UserStatus = {
 export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
 
 
-export const PropertyRentRequestStatus = {
-  PENDING: 'PENDING',
-  APPROVED: 'APPROVED',
-  REJECTED: 'REJECTED'
-} as const
-
-export type PropertyRentRequestStatus = (typeof PropertyRentRequestStatus)[keyof typeof PropertyRentRequestStatus]
-
-
 export const RentStatus = {
   RENTED: 'RENTED',
   PENDING: 'PENDING',
@@ -68,6 +59,15 @@ export const PaymentProvider = {
 } as const
 
 export type PaymentProvider = (typeof PaymentProvider)[keyof typeof PaymentProvider]
+
+
+export const PropertyRentRequestStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type PropertyRentRequestStatus = (typeof PropertyRentRequestStatus)[keyof typeof PropertyRentRequestStatus]
 
 
 export const PropertyAmenity = {

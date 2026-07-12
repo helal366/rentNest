@@ -4,10 +4,10 @@ import { ILoginUser, IRegisterUser } from "./auth_interfaces.js";
 import { prisma } from "../../lib/prisma.js";
 import bcrypt from "bcryptjs";
 import { envVars } from "../../config/index.js";
-import { userCheck } from "../../utils/userCheck.js";
 import { JwtPayload, SignOptions } from "jsonwebtoken";
 import { jwtTokens } from "../../utils/jwtTokens.js";
 import { Role, UserStatus } from "#db-client";
+import { bannedCheck } from "../../utils/bannedCheck.js";
 
 const authRegisterServices = async (payload: IRegisterUser) => {
   const { name, email, role, password, address, contactNo } = payload;
@@ -109,7 +109,9 @@ const authLoginServices = async (payload: ILoginUser) => {
     );
   }
   // console.log(user);
-  userCheck(user);
+  if(user.userStatus===UserStatus.BANNED){
+        throw new AppError(`This ${user.role} is BANNED`, StatusCodes.FORBIDDEN)
+    }
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
     throw new AppError("Invalid email or password", StatusCodes.BAD_REQUEST);
@@ -144,6 +146,9 @@ const getAuthMeServices = async (userId: string) => {
       password: true,
     },
   });
+  if(user.userStatus===UserStatus.BANNED){
+        throw new AppError(`This ${user.role} is BANNED`, StatusCodes.FORBIDDEN)
+    }
   return {
     user,
   };
