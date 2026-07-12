@@ -80,13 +80,23 @@ const createReviewServices = async (payload: ICreateReviewPayload) => {
 
   return review;
 };
-const deleteReviewServices= async(reviewId:string)=>{
-  // await prisma.review.delete({
-  //   where:{
-  //     id: reviewId
-  //   }
-  // })
+const deleteReviewServices = async (reviewId: string) => {
+  console.log("Attempting to delete review with ID:", reviewId);
+
+  const result = await prisma.review.deleteMany({
+    where: {
+      id: reviewId // Make sure this exactly matches your DB string type
+    }
+  });
+
+  console.log("Prisma delete result count:", result.count);
+
+  if (result.count === 0) {
+    // This stops the controller from sending a fake success message to Postman
+    throw new AppError(`No review found with ID ${reviewId}. Database unchanged.`, StatusCodes.NOT_FOUND);
+  }
 }
+
 export const reviewServices = {
   createReviewServices,
   deleteReviewServices

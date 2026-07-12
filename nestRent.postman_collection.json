@@ -48,7 +48,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email\": \"mir@gmail.com\",\r\n    \"password\": \"123456\"\r\n}",
+              "raw": "{\r\n    \"email\": \"abir6@gmail.com\",\r\n    \"password\": \"123456\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -139,7 +139,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"category\": \"OFFICE\",\r\n    \"rentPrice\": 60000,\r\n    \"amenities\": [\"WIFI\", \"ELEVATOR\", \"PARKING\"],\r\n    \"rentStatus\": \"AVAILABLE\",\r\n    \"location\": \"FARMGATE\",\r\n    \"areaInSqFt\": 1600\r\n    \r\n}",
+              "raw": "{\r\n    \"category\": \"SHOP\",\r\n    \"rentPrice\": 15000,\r\n    \"amenities\": [],\r\n    \"rentStatus\": \"AVAILABLE\",\r\n    \"location\": \"GULISTAN\",\r\n    \"areaInSqFt\": 200\r\n    \r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -170,7 +170,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"amenities\": [\r\n  \"ELEVATOR\",\r\n  \"WIFI\",\r\n  \"AIR_CONDITIONING\",\r\n  \"PARKING\",\r\n  \"KITCHEN\"\r\n]\r\n   \r\n}",
+              "raw": "{\r\n    \"amenities\": [\r\n  \"ELEVATOR\",\r\n  \"WIFI\",\r\n  \"PARKING\",\r\n  \"KITCHEN\"\r\n]\r\n   \r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -178,7 +178,7 @@
               }
             },
             "url": {
-              "raw": "https://rent-nest-delta.vercel.app/landlord/properties/748fb80c-cc16-4845-850b-ed71ffa6df82",
+              "raw": "https://rent-nest-delta.vercel.app/api/landlord/properties/f108e960-466e-4d58-beff-847361d046c9",
               "protocol": "https",
               "host": [
                 "rent-nest-delta",
@@ -186,9 +186,10 @@
                 "app"
               ],
               "path": [
+                "api",
                 "landlord",
                 "properties",
-                "748fb80c-cc16-4845-850b-ed71ffa6df82"
+                "f108e960-466e-4d58-beff-847361d046c9"
               ]
             }
           },
@@ -200,7 +201,7 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "https://rent-nest-delta.vercel.app/landlord/properties/08b62407-e169-47fb-af91-162429ff1d38",
+              "raw": "https://rent-nest-delta.vercel.app/api/landlord/properties/12b0bb02-658a-489c-bbdb-bdbd6784305b",
               "protocol": "https",
               "host": [
                 "rent-nest-delta",
@@ -208,9 +209,10 @@
                 "app"
               ],
               "path": [
+                "api",
                 "landlord",
                 "properties",
-                "08b62407-e169-47fb-af91-162429ff1d38"
+                "12b0bb02-658a-489c-bbdb-bdbd6784305b"
               ]
             }
           },
@@ -245,7 +247,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "",
+              "raw": "{\r\n    \"requestStatus\":\"APPROVED\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -253,7 +255,7 @@
               }
             },
             "url": {
-              "raw": "https://rent-nest-delta.vercel.app/api/landlord/requests/6c89c174-27a9-46c2-ae4d-2841fbf194e4",
+              "raw": "https://rent-nest-delta.vercel.app/api/landlord/requests/395d3b5b-5529-4ee6-9575-2537ea1fb72b",
               "protocol": "https",
               "host": [
                 "rent-nest-delta",
@@ -264,7 +266,7 @@
                 "api",
                 "landlord",
                 "requests",
-                "6c89c174-27a9-46c2-ae4d-2841fbf194e4"
+                "395d3b5b-5529-4ee6-9575-2537ea1fb72b"
               ]
             }
           },
@@ -281,7 +283,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "https://rent-nest-delta.vercel.app/properties/",
+              "raw": "https://rent-nest-delta.vercel.app/api/properties/",
               "protocol": "https",
               "host": [
                 "rent-nest-delta",
@@ -289,6 +291,7 @@
                 "app"
               ],
               "path": [
+                "api",
                 "properties",
                 ""
               ]
@@ -302,7 +305,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "https://rent-nest-delta.vercel.app/properties/08b62407-e169-47fb-af91-162429ff1d38",
+              "raw": "https://rent-nest-delta.vercel.app/api/properties/7ae65a2d-14dd-49b2-8f80-ee0d5740e49b",
               "protocol": "https",
               "host": [
                 "rent-nest-delta",
@@ -310,8 +313,9 @@
                 "app"
               ],
               "path": [
+                "api",
                 "properties",
-                "08b62407-e169-47fb-af91-162429ff1d38"
+                "7ae65a2d-14dd-49b2-8f80-ee0d5740e49b"
               ]
             }
           },
@@ -329,7 +333,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"propertyId\": \"3c540983-025c-4561-a8a4-0ac1570ae95c\",\r\n    \"landlordId\" : \"383418a8-fd81-43a8-bb79-75ad9f029e8b\"\r\n}",
+              "raw": "{\r\n    \"propertyId\": \"f108e960-466e-4d58-beff-847361d046c9\",\r\n    \"landlordId\" : \"03257634-016d-4677-80b1-9b409df1aff5\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -337,7 +341,7 @@
               }
             },
             "url": {
-              "raw": "https://rent-nest-delta.vercel.app/rentals/",
+              "raw": "https://rent-nest-delta.vercel.app/api/rentals/",
               "protocol": "https",
               "host": [
                 "rent-nest-delta",
@@ -345,6 +349,7 @@
                 "app"
               ],
               "path": [
+                "api",
                 "rentals",
                 ""
               ]
@@ -365,7 +370,7 @@
               "raw": "{\r\n    \"propertyId\": \"3f101891-b676-4a11-b88b-2c4748fb8041\",\r\n    \"landlordId\" : \"f0ec1caf-ddaf-43c7-b3e5-dc24f8cc9f78\"\r\n}"
             },
             "url": {
-              "raw": "https://rent-nest-delta.vercel.app/rentals/6c89c174-27a9-46c2-ae4d-2841fbf194e4",
+              "raw": "https://rent-nest-delta.vercel.app/api/rentals/af83b531-e1f7-447a-8a5f-703ff5bc37c9",
               "protocol": "https",
               "host": [
                 "rent-nest-delta",
@@ -373,8 +378,9 @@
                 "app"
               ],
               "path": [
+                "api",
                 "rentals",
-                "6c89c174-27a9-46c2-ae4d-2841fbf194e4"
+                "af83b531-e1f7-447a-8a5f-703ff5bc37c9"
               ]
             }
           },
@@ -386,7 +392,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "https://rent-nest-delta.vercel.app/rentals/",
+              "raw": "https://rent-nest-delta.vercel.app/api/rentals/",
               "protocol": "https",
               "host": [
                 "rent-nest-delta",
@@ -394,6 +400,7 @@
                 "app"
               ],
               "path": [
+                "api",
                 "rentals",
                 ""
               ]
@@ -412,7 +419,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "https://rent-nest-delta.vercel.app/categories",
+              "raw": "https://rent-nest-delta.vercel.app/api/categories",
               "protocol": "https",
               "host": [
                 "rent-nest-delta",
@@ -420,6 +427,7 @@
                 "app"
               ],
               "path": [
+                "api",
                 "categories"
               ]
             }
@@ -437,7 +445,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "https://rent-nest-delta.vercel.app/admin/users",
+              "raw": "https://rent-nest-delta.vercel.app/api/admin/users",
               "protocol": "https",
               "host": [
                 "rent-nest-delta",
@@ -445,6 +453,7 @@
                 "app"
               ],
               "path": [
+                "api",
                 "admin",
                 "users"
               ]
@@ -458,7 +467,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "https://rent-nest-delta.vercel.app/admin/properties",
+              "raw": "https://rent-nest-delta.vercel.app/api/admin/properties",
               "protocol": "https",
               "host": [
                 "rent-nest-delta",
@@ -466,6 +475,7 @@
                 "app"
               ],
               "path": [
+                "api",
                 "admin",
                 "properties"
               ]
@@ -479,7 +489,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "https://rent-nest-delta.vercel.app/admin/rentals",
+              "raw": "https://rent-nest-delta.vercel.app/api/admin/rentals",
               "protocol": "https",
               "host": [
                 "rent-nest-delta",
@@ -487,6 +497,7 @@
                 "app"
               ],
               "path": [
+                "api",
                 "admin",
                 "rentals"
               ]
@@ -501,7 +512,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"userStatus\":\"BANNED\"\r\n}",
+              "raw": "{\r\n    \"userStatus\":\"UNBAN\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -509,7 +520,7 @@
               }
             },
             "url": {
-              "raw": "https://rent-nest-delta.vercel.app/admin/users/912f35fa-2b9b-4942-a042-d1f41d064bcf",
+              "raw": "https://rent-nest-delta.vercel.app/api/admin/users/912f35fa-2b9b-4942-a042-d1f41d064bcf",
               "protocol": "https",
               "host": [
                 "rent-nest-delta",
@@ -517,6 +528,7 @@
                 "app"
               ],
               "path": [
+                "api",
                 "admin",
                 "users",
                 "912f35fa-2b9b-4942-a042-d1f41d064bcf"
@@ -537,7 +549,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"propertyId\": \"3c540983-025c-4561-a8a4-0ac1570ae95c\",\r\n      \"content\": \"Beautiful one\",\r\n      \"rating\": 5\r\n}",
+              "raw": "{\r\n    \"propertyId\": \"f108e960-466e-4d58-beff-847361d046c9\",\r\n      \"content\": \"Nice Property, I like it.\",\r\n      \"rating\": 5\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -545,7 +557,7 @@
               }
             },
             "url": {
-              "raw": "https://rent-nest-delta.vercel.app/reviews",
+              "raw": "https://rent-nest-delta.vercel.app/api/reviews",
               "protocol": "https",
               "host": [
                 "rent-nest-delta",
@@ -553,7 +565,30 @@
                 "app"
               ],
               "path": [
+                "api",
                 "reviews"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Review",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "https://rent-nest-delta.vercel.app/api/reviews/96f35e9e-efe0-401d-9bd3-afc18c290ca3",
+              "protocol": "https",
+              "host": [
+                "rent-nest-delta",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "reviews",
+                "96f35e9e-efe0-401d-9bd3-afc18c290ca3"
               ]
             }
           },
@@ -571,7 +606,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"rentalRequestId\":\"6c89c174-27a9-46c2-ae4d-2841fbf194e4\"\r\n}",
+              "raw": "{\r\n    \"rentalRequestId\":\"395d3b5b-5529-4ee6-9575-2537ea1fb72b\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -579,7 +614,7 @@
               }
             },
             "url": {
-              "raw": "https://rent-nest-delta.vercel.app/payments/create",
+              "raw": "https://rent-nest-delta.vercel.app/api/payments/create",
               "protocol": "https",
               "host": [
                 "rent-nest-delta",
@@ -587,6 +622,7 @@
                 "app"
               ],
               "path": [
+                "api",
                 "payments",
                 "create"
               ]
@@ -600,7 +636,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "https://rent-nest-delta.vercel.app/payments/",
+              "raw": "https://rent-nest-delta.vercel.app/api/payments/",
               "protocol": "https",
               "host": [
                 "rent-nest-delta",
@@ -608,6 +644,7 @@
                 "app"
               ],
               "path": [
+                "api",
                 "payments",
                 ""
               ]
@@ -621,7 +658,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "https://rent-nest-delta.vercel.app/payments/66f51936-a3ea-40da-bd29-1e8ed5907280",
+              "raw": "https://rent-nest-delta.vercel.app/api/payments/6865b470-2445-47e7-914e-0080aa52dcb8",
               "protocol": "https",
               "host": [
                 "rent-nest-delta",
@@ -629,8 +666,9 @@
                 "app"
               ],
               "path": [
+                "api",
                 "payments",
-                "66f51936-a3ea-40da-bd29-1e8ed5907280"
+                "6865b470-2445-47e7-914e-0080aa52dcb8"
               ]
             }
           },

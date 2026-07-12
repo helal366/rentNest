@@ -33,7 +33,7 @@ const deleteReviewcontroller= catchAsync(async(req:Request, res:Response, next:N
   if(!reviewId){
     throw new AppError(`Review id is required.`,StatusCodes.NOT_FOUND)
   };
-  // await reviewServices.deleteReviewServices(reviewId as string)
+  await reviewServices.deleteReviewServices(reviewId as string)
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
