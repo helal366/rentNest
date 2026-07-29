@@ -213,32 +213,6 @@ if (envVars.NODE_ENV !== "production") {
 export default app;
 ```
 
-### stripe payment
-
-- Stripe payment
-
-* Sign up/Login first
-* Go to Stripe docs from Developer tab
-* Get started with Stripe
-* Sell subscription as SaaS start-up
-* Create a test product and price
-* Click on the option: Create a test product in the dashboard
-
--> Another way:
-
-- Go to Dashboard
-- Product Catalog
-- Create product
-
----
-
-Now create product
-
-- Fill up name and description
-- Pricing Model : Standard pricing
-- Price in BDT (should select this currency)
-- According to project : Recurring or One Time (One Time for now)
-
 ### deployment in vercel
 
 - create vercel.json file in the root directory. write the following code.
@@ -335,3 +309,30 @@ vercel --prod --force
 pnpm add sslcommerz-lts
 pnpm add --save-dev @types/sslcommerz-lts
 ```
+
+
+### stripe payment
+
+- Stripe payment
+
+* Sign up/Login first
+* Go to Stripe docs from Developer tab
+* Get started with Stripe
+* Sell subscription as SaaS start-up
+* Create a test product and price
+* Click on the option: Create a test product in the dashboard
+
+-> Another way:
+
+- Go to Dashboard
+- Product Catalog
+- Create product
+
+---
+
+Now create product
+
+- Fill up name and description
+- Pricing Model : Standard pricing
+- Price in BDT (should select this currency)
+- According to project : Recurring or One Time (One Time for now)

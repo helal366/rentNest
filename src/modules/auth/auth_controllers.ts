@@ -20,12 +20,13 @@ const authLoginController = catchAsync(async(req:Request, res:Response)=>{
     const payload = req.body;
     const result = await authServices.authLoginServices(payload);
 
-    setAuthTokensInCookies(res, result)
+    setAuthTokensInCookies(res, result);
+    const { accessToken, refreshToken } = result
     sendResponse(res, {
         success:true,
         statusCode: StatusCodes.OK,
         message: "Login successful.",
-        data: result
+        data: { accessToken, refreshToken }
     })
 });
 const getAuthMeController = catchAsync(async(req:Request, res:Response)=>{
