@@ -12,7 +12,7 @@ export const setAuthTokensInCookies = (
   if (tokenInfo.accessToken) {
     res.cookie("accessToken", tokenInfo.accessToken, {
       httpOnly: true,
-       secure: isProduction,        
+      secure: isProduction,        
       sameSite: "strict", 
       maxAge:1000*60*60*24*1        
     });

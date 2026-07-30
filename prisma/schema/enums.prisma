@@ -15,9 +15,9 @@ enum RentStatus{
     AVAILABLE
 }
 enum PaymentMethod{
-    CARD     // For Visa, Mastercard, Amex, etc.
-    WALLET  // For bKash, Nagad, Rocket, Upay, etc.
-    BANK_TRANSFER    // For Internet Banking (City Bank, Islami Bank, etc.)
+    CARD     
+    WALLET  
+    BANK_TRANSFER    
 }
 enum PaymentStatus{
     PENDING
