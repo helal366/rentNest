@@ -1,5 +1,4 @@
-import { PropertyAmenity, PropertyLocation, RentStatus } from "#db-client"; 
-
+import { PropertyAmenity, PropertyLocation, RentStatus } from "#db-client";
 
 export interface IProperty {
   id: string;
@@ -23,5 +22,8 @@ export type TPropertyFilters = {
   location?: PropertyLocation;
   minPrice?: number;
   maxPrice?: number;
-  category?: string; // or category name
+  category?: string;
+  amenities?: PropertyAmenity[];
+  page?: number;
+  limit?: number;
 };

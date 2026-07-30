@@ -4,45 +4,50 @@ import { propertyServices } from "./property_services.js";
 import { sendResponse } from "../../utils/sendResponse.js";
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "../../utils/globalErrorHelper.js";
-import { PropertyLocation } from "#db-client"; 
+import { PropertyAmenity, PropertyLocation } from "#db-client"; 
+import { getAllPropertiesQuerySchema } from "./propertyZodSchemas.js";
 
 const getAllPropertiesController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    if(req.query){
-       // 1. Define allowed query parameters
-    const validQueries = ["location", "minPrice", "maxPrice", "category"];
     
-    // 2. Check for invalid query keys
-    const receivedQueries = Object.keys(req.query);
-    const invalidQueries = receivedQueries.filter(key => !validQueries.includes(key));
+    const parsedQuery = getAllPropertiesQuerySchema.parse(req.query);
 
-    // 3. Reject request if invalid queries exist
-    if (invalidQueries.length > 0) {
-      return next(new AppError(
-        `Invalid query parameter(s): ${invalidQueries.join(", ")} Valid query parameters are: ${validQueries.join(", ")}`,
-        StatusCodes.BAD_REQUEST, 
-      ));
-    }
-    }
+    const limit = parsedQuery.limit 
+      ? parsedQuery.limit 
+      : parsedQuery.perPage 
+        ? parsedQuery.perPage
+        : 10;
+
     const filters = {
-      location: req.query.location
-        ? (req.query.location as PropertyLocation)
-        : undefined,
-      minPrice: req.query.minPrice ? Number(req.query.minPrice) : undefined,
-      maxPrice: req.query.maxPrice ? Number(req.query.maxPrice) : undefined,
-      category: req.query.category ? (req.query.category as string) : undefined,
+      location: parsedQuery.location as PropertyLocation | undefined,
+      minPrice: parsedQuery.minPrice,
+      maxPrice: parsedQuery.maxPrice,
+      category: parsedQuery.category,
+      amenities: parsedQuery.amenities, // Automatically typed as PropertyAmenity[]
+      page: parsedQuery.page,
+      limit,
     };
-   
 
     const result = await propertyServices.getAllPropertiesServices(filters);
+    
     sendResponse(res, {
       success: true,
       statusCode: StatusCodes.OK,
       message: "Properties retrieved successfully.",
-      data: result,
+      data: {
+        meta: {
+          page: parsedQuery.page,
+          limit,
+          total: result.totalCount,
+          totalPages: Math.ceil(result.totalCount / limit) || 1
+        },
+        properties: result.allProperties
+      },
     });
   },
 );
+
+
 const getPropertyByIdController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const propertyId = req.params.id;
@@ -60,6 +65,7 @@ const getPropertyByIdController = catchAsync(
     });
   },
 );
+
 export const propertyControllers = {
   getAllPropertiesController,
   getPropertyByIdController,

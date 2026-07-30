@@ -76,7 +76,7 @@ const authRegisterServices = async (payload: IRegisterUser) => {
     },
   });
 
-  return { user };
+  return user ;
 };
 const authLoginServices = async (payload: ILoginUser) => {
   const { email, password } = payload;
@@ -145,9 +145,7 @@ const getAuthMeServices = async (userId: string) => {
       password: true,
     },
   });
-  return {
-    user,
-  };
+  return user;
 };
 const refreshTokenServices = async (refreshToken: string) => {
   const verifiedRefreshToken = jwtTokens.verifyToken(
