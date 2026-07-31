@@ -45,16 +45,43 @@ const getAllPropertiesServices = async (filters: TPropertyFilters) => {
   const [allProperties, totalCount] = await prisma.$transaction([
     prisma.property.findMany({
       where: whereConditions,
-      skip: skipValue,   // Offset pointer
-      take: limit,       // Count limit constraint
+      skip: skipValue,  
+      take: limit,     
       orderBy: {
         createdAt: "desc",
       },
       include: {
-        category: true,
-        propertyRentRequests: true,
-        approvedTenant: true,
-        landlord: true,
+        category: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
+        propertyRentRequests: {
+          select:{
+            id: true,
+            isPaid: true,
+            requestStatus: true
+          }
+        },
+        approvedTenant: {
+          select:{
+            id:true,
+            name: true,
+            email: true,
+            contactNo: true,
+            userStatus: true
+          }
+        },
+        landlord: {
+          select:{
+            id:true,
+            name: true,
+            email: true,
+            contactNo: true,
+            userStatus: true
+          }
+        },
       },
     }),
     prisma.property.count({ where: whereConditions })
