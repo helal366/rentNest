@@ -4,7 +4,7 @@ import { propertyServices } from "./property_services.js";
 import { sendResponse } from "../../utils/sendResponse.js";
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "../../utils/globalErrorHelper.js";
-import { PropertyAmenity, PropertyLocation } from "#db-client"; 
+import { PropertyAmenity, PropertyLocation, RentStatus } from "#db-client"; 
 import { getAllPropertiesQuerySchema } from "./propertyZodSchemas.js";
 
 const getAllPropertiesController = catchAsync(
@@ -20,10 +20,11 @@ const getAllPropertiesController = catchAsync(
 
     const filters = {
       location: parsedQuery.location as PropertyLocation | undefined,
+      rentStatus: parsedQuery.rentStatus as RentStatus | undefined,
       minPrice: parsedQuery.minPrice,
       maxPrice: parsedQuery.maxPrice,
       category: parsedQuery.category,
-      amenities: parsedQuery.amenities, // Automatically typed as PropertyAmenity[]
+      amenities: parsedQuery.amenities, 
       page: parsedQuery.page,
       limit,
     };

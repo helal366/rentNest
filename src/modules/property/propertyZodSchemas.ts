@@ -1,9 +1,22 @@
 import { z } from "zod";
 
 export const getAllPropertiesQuerySchema = z.object({
-  location: z.string().optional(),
-  category: z.string().optional(),
-  
+  location: z
+    .string()
+    .toUpperCase()
+    .optional(),
+
+   category: z
+    .string()
+    .toUpperCase()
+    .optional(),
+    
+   rentStatus: z
+    .string()
+    .toUpperCase()
+    .pipe(z.enum(["AVAILABLE", "RENTED", "PENDING"]))
+    .optional(),
+
   minPrice: z.coerce.number({ error: () => "minPrice must be a number" }).optional(),
   maxPrice: z.coerce.number({ error: () => "maxPrice must be a number" }).optional(),
   

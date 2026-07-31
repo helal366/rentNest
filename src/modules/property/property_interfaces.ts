@@ -23,6 +23,7 @@ export type TPropertyFilters = {
   minPrice?: number;
   maxPrice?: number;
   category?: string;
+  rentStatus?: RentStatus,
   amenities?: PropertyAmenity[];
   page?: number;
   limit?: number;

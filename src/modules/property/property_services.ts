@@ -3,12 +3,23 @@ import { prisma } from "../../lib/prisma.js";
 import { TPropertyFilters } from "./property_interfaces.js";
 import { queryValidationCheck } from "../../helperFunction/queryValidationCheck.js";
 
-
 const getAllPropertiesServices = async (filters: TPropertyFilters) => {
-  const { location, minPrice, maxPrice, category, amenities, page = 1, limit = 10 } = filters;
+  const {
+    location,
+    minPrice,
+    maxPrice,
+    category,
+    rentStatus,
+    amenities,
+    page = 1,
+    limit = 12,
+  } = filters;
   const propertyCategoryId = await queryValidationCheck(filters);
   const whereConditions: any = {};
-  
+
+  if (rentStatus) {
+    whereConditions.rentStatus = rentStatus;
+  }
   // 1. Location Filtering
   if (location) {
     whereConditions.location = location.toUpperCase();
@@ -41,12 +52,12 @@ const getAllPropertiesServices = async (filters: TPropertyFilters) => {
   // 5. Calculate Skip (Offset) values based on page numbers
   const skipValue = (page - 1) * limit;
 
-  // 6. Fetch records and execution total counts in parallel 
+  // 6. Fetch records and execution total counts in parallel
   const [allProperties, totalCount] = await prisma.$transaction([
     prisma.property.findMany({
       where: whereConditions,
-      skip: skipValue,  
-      take: limit,     
+      skip: skipValue,
+      take: limit,
       orderBy: {
         createdAt: "desc",
       },
@@ -54,43 +65,41 @@ const getAllPropertiesServices = async (filters: TPropertyFilters) => {
         category: {
           select: {
             id: true,
-            name: true
-          }
+            name: true,
+          },
         },
         propertyRentRequests: {
-          select:{
+          select: {
             id: true,
             isPaid: true,
-            requestStatus: true
-          }
+            requestStatus: true,
+          },
         },
         approvedTenant: {
-          select:{
-            id:true,
+          select: {
+            id: true,
             name: true,
             email: true,
             contactNo: true,
-            userStatus: true
-          }
+            userStatus: true,
+          },
         },
         landlord: {
-          select:{
-            id:true,
+          select: {
+            id: true,
             name: true,
             email: true,
             contactNo: true,
-            userStatus: true
-          }
+            userStatus: true,
+          },
         },
       },
     }),
-    prisma.property.count({ where: whereConditions })
+    prisma.property.count({ where: whereConditions }),
   ]);
 
   return { allProperties, totalCount };
 };
-
-
 
 const getPropertyByIdServices = async (propertyId: string) => {
   const property = await prisma.property.findUniqueOrThrow({
