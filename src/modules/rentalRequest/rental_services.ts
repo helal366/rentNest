@@ -54,12 +54,50 @@ const getRentalRequestsByTenantOrLandlordServices = async (
   userId: string,
   userRole: Role,
 ) => {
-  if (userRole !== Role.TENANT && userRole !== Role.LANDLORD) {
-    throw new AppError("Please login as TENANT or LANDLORD", StatusCodes.FORBIDDEN);
+  if (
+    userRole !== Role.TENANT &&
+    userRole !== Role.LANDLORD &&
+    userRole !== Role.ADMIN
+  ) {
+    throw new AppError(
+      "Please login",
+      StatusCodes.FORBIDDEN,
+    );
   }
-
-  const rentalRequests=authGetRentalRequestsByUser(userId, userRole)
-  return rentalRequests;
+  if(userRole === Role.LANDLORD || userRole===Role.TENANT){
+    const rentalRequests=authGetRentalRequestsByUser(userId, userRole)
+    return rentalRequests;
+  }
+   const rentalRequests = await prisma.rentalRequest.findMany({
+     include: {
+       rentalRequestProperty: {
+         select: {
+           id: true,
+           rentStatus: true,
+           approvedTenant: {
+             select: {
+               name: true,
+               email: true,
+             },
+           },
+           location: true,
+           areaInSqFt: true,
+           amenities: true,
+         },
+       },
+       landlord: {
+         select: {
+           id: true,
+           name: true,
+           email: true,
+         },
+       },
+     },
+     orderBy: {
+       createdAt: "desc",
+     },
+   });
+   return rentalRequests
 };
 
 const getRentalRequestByIdServices = async (

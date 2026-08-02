@@ -11,7 +11,7 @@ rentalRouter.post(
 );
 rentalRouter.get(
   "/",
-  userAuth(Role.TENANT, Role.LANDLORD),
+  userAuth(Role.ADMIN, Role.TENANT, Role.LANDLORD),
   rentalRequestControllers.getRentalRequestsByTenantOrLandlordController,
 );
 rentalRouter.get(

@@ -9,6 +9,7 @@ import { AppError } from "../../utils/globalErrorHelper.js";
 const authRegisterController = catchAsync(async(req:Request, res:Response)=>{
     const payload = req.body;
     const result = await authServices.authRegisterServices(payload);
+    
     sendResponse(res, {
         success: true,
         statusCode: StatusCodes.OK,
@@ -35,7 +36,8 @@ const getAuthMeController = catchAsync(async(req:Request, res:Response)=>{
     if(!userId){
         throw new AppError("Please login", StatusCodes.BAD_REQUEST)
     }
-    const result = await authServices.getAuthMeServices(userId)
+    const result = await authServices.getAuthMeServices(userId);
+     console.log("🔥 from backend /me profile fetch:", result);
     sendResponse(res, {
         success: true,
         statusCode: StatusCodes.OK,
