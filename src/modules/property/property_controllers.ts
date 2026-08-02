@@ -12,7 +12,7 @@ const getAllPropertiesController = catchAsync(
     
     const parsedQuery = getAllPropertiesQuerySchema.parse(req.query);
 
-    console.log("from backend parsedQuery: ",parsedQuery)
+    // console.log("from backend parsedQuery: ",parsedQuery)
     const limit = parsedQuery.limit 
       ? parsedQuery.limit 
       : parsedQuery.perPage 
@@ -29,7 +29,7 @@ const getAllPropertiesController = catchAsync(
       page: parsedQuery.page,
       limit,
     };
-    console.log("from backend filters: ", filters)
+    // console.log("from backend filters: ", filters)
     const result = await propertyServices.getAllPropertiesServices(filters);
     
     sendResponse(res, {

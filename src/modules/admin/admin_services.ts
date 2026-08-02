@@ -38,7 +38,7 @@ const getAllRentalRequestsServices=async()=>{
     const rentalRequests = await prisma.rentalRequest.findMany();
     return rentalRequests
 };
-
+  
 const updateUserBanUnbanServices=async(userId:string, userStatus: string)=>{
     const validStatus=validateUserStatus(userStatus)
     const user = await prisma.user.findUniqueOrThrow({

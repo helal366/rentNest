@@ -141,6 +141,80 @@ const getAuthMeServices = async (userId: string) => {
     where: {
       id: userId,
     },
+    include: {
+      ownProperties: {
+        select: {
+          category: {
+            select: {
+              name: true,
+            },
+          },
+          rentStatus: true,
+          propertyRentRequests: {
+            select: {
+              requestStatus: true,
+              isPaid: true,
+            },
+          },
+          rentPrice: true,
+          areaInSqFt: true,
+          location: true,
+          amenities: true,
+        },
+      },
+      tenantReviews: {
+        select: {
+          content: true,
+          rating: true,
+          property: {
+            select: {
+              rentPrice: true,
+              areaInSqFt: true,
+              location: true,
+              amenities: true,
+            },
+          },
+        },
+      },
+      tenantRentalRequests: {
+        select: {
+          isPaid: true,
+          requestStatus: true,
+          rentalRequestProperty: {
+            select: {
+              rentPrice: true,
+              areaInSqFt: true,
+              location: true,
+              amenities: true,
+            },
+          },
+          landlord: {
+            select: {
+              name: true,
+              email: true,
+              contactNo: true,
+              address: true,
+            },
+          },
+        },
+      },
+      approvedRentalProperties: {
+        select: {
+          rentPrice: true,
+          areaInSqFt: true,
+          location: true,
+          amenities: true,
+          landlord: {
+            select: {
+              name: true,
+              email: true,
+              contactNo: true,
+              address: true,
+            },
+          },
+        },
+      },
+    },
     omit: {
       password: true,
     },
