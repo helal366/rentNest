@@ -5,7 +5,6 @@ import { StatusCodes } from "http-status-codes";
 import { AppError } from "../../utils/globalErrorHelper.js";
 import { landlordServices } from "./landlord_services.js";
 import { ICreatePropertyPayload } from "./landlord_interfaces.js";
-import { userCheck } from "../../utils/userCheck.js";
 
 const creatPropertyController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -105,7 +104,6 @@ const approveOrRejectRentalRequestController = catchAsync(
     if (!req.user) {
       throw new AppError("Please login", StatusCodes.UNAUTHORIZED);
     };
-    // userCheck(req.user);
     const rentalRequestId = req.params.id;
     if (!rentalRequestId || typeof rentalRequestId !== "string") {
       throw new AppError(

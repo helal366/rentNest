@@ -14,6 +14,7 @@ interface EnvVariables {
   SSL_COMMERZ_STORE_ID: string;
   SSL_COMMERZ_STORE_PASSWORD: string;
   VALIDATION_IPN_URL: string;
+  FRONTEND_URL:string;
 }
 const loadEnvVariables = (): EnvVariables => {
   const envVars: string[] = [
@@ -30,6 +31,7 @@ const loadEnvVariables = (): EnvVariables => {
     "SSL_COMMERZ_STORE_ID",
     "SSL_COMMERZ_STORE_PASSWORD",
     "VALIDATION_IPN_URL",
+    "FRONTEND_URL",
   ];
   envVars.forEach((element) => {
     if (!process.env[element]) {
@@ -51,6 +53,7 @@ const loadEnvVariables = (): EnvVariables => {
     SSL_COMMERZ_STORE_PASSWORD: process.env
       .SSL_COMMERZ_STORE_PASSWORD as string,
     VALIDATION_IPN_URL: process.env.VALIDATION_IPN_URL as string,
+    FRONTEND_URL: process.env.FRONTEND_URL as string,
   };
 };
 export const envVars = loadEnvVariables();

@@ -11,11 +11,11 @@ rentalRouter.post(
 );
 rentalRouter.get(
   "/",
-  userAuth(Role.ADMIN, Role.TENANT, Role.LANDLORD),
+  userAuth(Role.TENANT, Role.LANDLORD),
   rentalRequestControllers.getRentalRequestsByTenantOrLandlordController,
 );
 rentalRouter.get(
   "/:id",
-  userAuth(Role.ADMIN, Role.LANDLORD, Role.TENANT),
+  userAuth(Role.LANDLORD, Role.TENANT),
   rentalRequestControllers.getRentalRequestByIdController,
 );

@@ -37,7 +37,7 @@ const getAuthMeController = catchAsync(async(req:Request, res:Response)=>{
         throw new AppError("Please login", StatusCodes.BAD_REQUEST)
     }
     const result = await authServices.getAuthMeServices(userId);
-     console.log("🔥 from backend /me profile fetch:", result);
+    //  console.log("🔥 from backend /me profile fetch:", result);
     sendResponse(res, {
         success: true,
         statusCode: StatusCodes.OK,

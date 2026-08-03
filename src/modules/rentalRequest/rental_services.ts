@@ -56,47 +56,16 @@ const getRentalRequestsByTenantOrLandlordServices = async (
 ) => {
   if (
     userRole !== Role.TENANT &&
-    userRole !== Role.LANDLORD &&
-    userRole !== Role.ADMIN
+    userRole !== Role.LANDLORD
   ) {
     throw new AppError(
       "Please login",
       StatusCodes.FORBIDDEN,
     );
   }
-  if(userRole === Role.LANDLORD || userRole===Role.TENANT){
-    const rentalRequests=authGetRentalRequestsByUser(userId, userRole)
-    return rentalRequests;
-  }
-   const rentalRequests = await prisma.rentalRequest.findMany({
-     include: {
-       rentalRequestProperty: {
-         select: {
-           id: true,
-           rentStatus: true,
-           approvedTenant: {
-             select: {
-               name: true,
-               email: true,
-             },
-           },
-           location: true,
-           areaInSqFt: true,
-           amenities: true,
-         },
-       },
-       landlord: {
-         select: {
-           id: true,
-           name: true,
-           email: true,
-         },
-       },
-     },
-     orderBy: {
-       createdAt: "desc",
-     },
-   });
+
+  const rentalRequests=await authGetRentalRequestsByUser(userId, userRole)
+
    return rentalRequests
 };
 
@@ -115,6 +84,13 @@ const getRentalRequestByIdServices = async (
           rentPrice: true,
           location: true,
           rentStatus: true,
+          areaInSqFt: true,
+          amenities: true,
+          category: {
+            select: {
+              name: true,
+            },
+          },
         },
       },
       landlord: {
@@ -122,6 +98,9 @@ const getRentalRequestByIdServices = async (
           id: true,
           name: true,
           email: true,
+          address: true,
+          contactNo: true,
+          userStatus: true,
         },
       },
       tenant: {
@@ -129,6 +108,18 @@ const getRentalRequestByIdServices = async (
           id: true,
           name: true,
           email: true,
+          address: true,
+          contactNo: true,
+          userStatus: true,
+        },
+      },
+      payments: {
+        select: {
+          amount: true,
+          paidAt: true,
+          method: true,
+          paymentStatus: true,
+          provider: true,
         },
       },
     },
