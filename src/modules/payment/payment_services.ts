@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { prisma } from "../../lib/prisma.js";
 import { AppError } from "../../utils/globalErrorHelper.js";
-import { Role} from "#db-client";
+import { Prisma, Role} from "#db-client";
 import { sslCommerzInit } from "../../utils/sslcommerz/sslcommerz_init.js";
 import { findData } from "../../utils/sslcommerz/findData.js";
 import { createPaymentCheckValidity } from "../../utils/sslcommerz/createPaymentCheckValidity.js";
@@ -134,29 +134,101 @@ const confirmPaymentServices = async (payload: IConfirmPaymentPayload) => {
 
 
 // Retrieve payment history filtered by user authority
-const getPaymentHistoryServices = async (userId: string, role: string) => {
-  if (role === "ADMIN") {
-    return await prisma.payment.findMany({
-      orderBy: { paidAt: "desc" },
-    });
+const getPaymentHistoryServices = async (userId: string, role: Role) => {
+  // 1. Build a type-safe dynamic filter condition
+  const whereClause: Prisma.PaymentWhereInput = {};
+  
+  if (role === Role.LANDLORD) {
+    whereClause.landlordId = userId;
+  } else if (role === Role.TENANT) {
+    whereClause.tenantId = userId;
   }
-  if(role===Role.LANDLORD){
-    return await prisma.payment.findMany({
-      where: { landlordId: userId },
-      orderBy: { paidAt: "desc" },
-    });
-  }
+  // If role is Role.ADMIN, whereClause remains empty {} to fetch all payments
+
+  // 2. Execute the single, streamlined database query
   return await prisma.payment.findMany({
-      where: { tenantId: userId },
-      orderBy: { paidAt: "desc" },
-    });
+    where: whereClause,
+    include: {
+      rentalRequest: {
+        select: {
+          isPaid: true,
+          rentalRequestProperty: {
+            select: {
+              category: {
+                select: {
+                  name: true,
+                },
+              },
+              rentPrice: true,
+              location: true,
+            },
+          },
+        },
+      },
+      tenant: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+      landlord: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+    },
+    orderBy: { 
+      paidAt: "desc" 
+    },
+  });
 };
+
 
 // Find individual payment transaction context
 const getPaymentDetailsByIdServices = async (paymentId: string, userId: string, role: Role) => {
   const payment = await prisma.payment.findUniqueOrThrow({
     where: { id: paymentId },
-    include: { rentalRequest: true },
+    include: {
+      rentalRequest: {
+        select: {
+          isPaid: true,
+          requestStatus: true,
+          rentalRequestProperty: {
+            select: {
+              category: {
+                select: {
+                  name: true,
+                },
+              },
+              rentPrice: true,
+              location: true,
+              amenities: true,
+              areaInSqFt: true,
+              rentStatus: true,
+            },
+          },
+        },
+      },
+      tenant: {
+        select: {
+          name: true,
+          email: true,
+          role: true,
+          address: true,
+          contactNo: true,
+        },
+      },
+      landlord: {
+        select: {
+          name: true,
+          email: true,
+          role: true,
+          address: true,
+          contactNo: true,
+        },
+      },
+    },
   });
 
   // Basic authorization wall check

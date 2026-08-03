@@ -9,8 +9,8 @@ model Payment{
     tenant User @relation("TenantPayments",fields: [tenantId], references: [id], onDelete: Cascade)
 
 
-     landlordId String
-     landlord User @relation(name: "LandlordPayments", fields: [landlordId], references: [id], onDelete: Cascade)
+    landlordId String
+    landlord User @relation(name: "LandlordPayments", fields: [landlordId], references: [id], onDelete: Cascade)
 
     amount Int
 
