@@ -20,9 +20,9 @@ export const sslCommerzInit = async (rentalRequestId: string) => {
     total_amount: property.rentPrice,
     currency: "BDT",
     tran_id: transactionId, // use unique tran_id for each api call
-    success_url: `${currentURL}/api/payments`, // Added tracking query parameters
-    fail_url: `${currentURL}/api/payments`,
-    cancel_url: `${currentURL}/api/payments`,
+    success_url: `${currentURL}/payments`, // Added tracking query parameters
+    fail_url: `${currentURL}/payments`,
+    cancel_url: `${currentURL}/payments`,
     ipn_url: `${currentURL}/ipn-success-payment`,
     shipping_method: "NO",
     product_name: `${category.name} Rental`,
