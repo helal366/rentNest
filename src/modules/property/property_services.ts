@@ -107,10 +107,59 @@ const getPropertyByIdServices = async (propertyId: string) => {
       id: propertyId,
     },
     include: {
-      category: true,
-      propertyRentRequests: true,
-      approvedTenant: true,
-      landlord: true,
+      category: {
+        select: {
+          name: true,
+        },
+      },
+      propertyRentRequests: {
+        select: {
+          requestStatus: true,
+          isPaid: true,
+          tenant: {
+            select: {
+              name: true,
+              email: true,
+              contactNo: true,
+              address: true,
+              userStatus: true,
+            },
+          },
+          
+        },
+      },
+      approvedTenant: {
+        select: {
+          name: true,
+          email: true,
+          contactNo: true,
+          address: true,
+          userStatus: true,
+        },
+      },
+      
+      landlord: {
+        select: {
+          id:true,
+          name: true,
+          email: true,
+          contactNo: true,
+          address: true,
+          userStatus: true,
+        },
+      },
+      propertyReviews:{
+        select: {
+          content: true,
+          rating: true,
+          tenant:{
+            select:{
+              name: true,
+              email: true
+            }
+          }
+        }
+      }
     },
   });
   return { property };

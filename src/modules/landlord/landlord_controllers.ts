@@ -134,10 +134,39 @@ const approveOrRejectRentalRequestController = catchAsync(
     });
   },
 );
+
+const getMyPropertiesController=catchAsync( async (req: Request, res: Response, next: NextFunction) => {
+  if(!req.user){
+    throw new AppError("Please login.", StatusCodes.UNAUTHORIZED)
+  }
+  const userId= req.user.id;
+  const result = await landlordServices.getMyPropertiesServices(userId);
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "My properties retrieved successfully.",
+    data: {
+      meta: {
+        total: result.totalCount,
+      },
+      properties: result.myProperties,
+    },
+  });
+});
+
+const getMySinglePropertyController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
+  if (!req.user) {
+    throw new AppError("Please login.", StatusCodes.UNAUTHORIZED);
+  }
+  const userId = req.user.id;
+  const result = await landlordServices.getMySinglePropertyServices(userId);
+})
 export const landlordControllers = {
   creatPropertyController,
   updatePropertyController,
   deletePropertyController,
   getRentalRequestsByLandlordController,
   approveOrRejectRentalRequestController,
+  getMyPropertiesController,
+  getMySinglePropertyController,
 };

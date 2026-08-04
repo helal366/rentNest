@@ -519,10 +519,64 @@ const approveOrRejectRentalRequestServices = async (
    return { message: "Rental request rejected and property availability restored successfully." };
 };
 
+const getMyPropertiesServices=async(userId:string)=>{
+  const [myProperties, totalCount] = await prisma.$transaction([
+    prisma.property.findMany({
+      where: {
+        landlordId: userId
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        propertyRentRequests: {
+          select: {
+            id: true,
+            isPaid: true,
+            requestStatus: true,
+          },
+        },
+        approvedTenant: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            contactNo: true,
+            userStatus: true,
+          },
+        },
+        landlord: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            contactNo: true,
+            userStatus: true,
+          },
+        },
+      },
+    }),
+    prisma.property.count(),
+  ]);
+
+  return { myProperties, totalCount };
+};
+
+const getMySinglePropertyServices = async (userId: string) => {
+  
+};
 export const landlordServices = {
   creatPropertyServices,
   updatePropertyServices,
   deletePropertyServices,
   getRentalRequestsByLandlordServices,
   approveOrRejectRentalRequestServices,
+  getMyPropertiesServices,
+  getMySinglePropertyServices,
 };

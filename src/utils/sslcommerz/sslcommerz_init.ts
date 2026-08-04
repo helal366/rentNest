@@ -6,10 +6,9 @@ import SSLCommerzPayment from "sslcommerz-lts";
 export const sslCommerzInit = async (rentalRequestId: string) => {
   const { rentalRequest, property, tenant, category } =
     await findData(rentalRequestId);
-  const currentURL = envVars.FRONTEND_URL;
-    // envVars.NODE_ENV === "development"
-    //   ? envVars.APP_LOCAL_URL
-    //   : envVars.VERCEL_URL;
+  const currentURL = envVars.NODE_ENV === "development"
+      ? envVars.APP_LOCAL_URL
+      : envVars.VERCEL_URL;
   const store_id = envVars.SSL_COMMERZ_STORE_ID;
   const store_passwd = envVars.SSL_COMMERZ_STORE_PASSWORD;
   const isLive = envVars.NODE_ENV === "production";
@@ -20,10 +19,11 @@ export const sslCommerzInit = async (rentalRequestId: string) => {
     total_amount: property.rentPrice,
     currency: "BDT",
     tran_id: transactionId, // use unique tran_id for each api call
-    success_url: `${currentURL}/payments`, // Added tracking query parameters
-    fail_url: `${currentURL}/payments`,
-    cancel_url: `${currentURL}/payments`,
+    success_url: `${currentURL}/api/payments/confirm`, // Added tracking query parameters
+    fail_url: `${currentURL}/api/payments/confirm`,
+    cancel_url: `${currentURL}/api/payments/confirm`,
     ipn_url: `${currentURL}/ipn-success-payment`,
+    // ipn_url: `${currentURL}/ipn-success-payment`,
     shipping_method: "NO",
     product_name: `${category.name} Rental`,
     product_category: `${category.name}`,

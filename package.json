@@ -14,7 +14,8 @@
     "postinstall": "prisma generate",
     "vercel-build": "prisma generate && prisma migrate deploy && tsc",
     "db:migrate": "prisma migrate dev",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "ssl:tunnel": "pnpm dlx localtunnel --port 5000"
   },
   "keywords": [],
   "author": "",

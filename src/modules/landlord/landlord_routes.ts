@@ -32,5 +32,10 @@ landlordRouter.patch(
 landlordRouter.get(
   "/my_properties",
   userAuth(Role.LANDLORD),
-  landlordControllers.approveOrRejectRentalRequestController, //change controller
+  landlordControllers.getMyPropertiesController, 
+);
+landlordRouter.get(
+  "/my_properties/:id",
+  userAuth(Role.LANDLORD),
+  landlordControllers.getMySinglePropertyController,
 );

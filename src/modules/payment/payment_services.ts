@@ -57,8 +57,6 @@ const confirmPaymentServices = async (payload: IConfirmPaymentPayload) => {
   // Call the official SSLCommerz validation endpoint
   const verifiedData = await validateSslPayment(val_id);
   // console.log({verifiedData})
-  // throw new AppError("payload",StatusCodes.ACCEPTED)
-  // Check if the validation server confirms the status as VALID or VALIDATED
   if (verifiedData.status !== "VALID" && verifiedData.status !== "VALIDATED") {
     throw new AppError("Payment validation failed at SSLCommerz", StatusCodes.PAYMENT_REQUIRED);
   }

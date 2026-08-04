@@ -4,6 +4,7 @@ import { sendResponse } from "../../utils/sendResponse.js";
 import { StatusCodes } from "http-status-codes";
 import { paymentServices } from "./payment_services.js";
 import { AppError } from "../../utils/globalErrorHelper.js";
+import { envVars } from "../../config/index.js";
 
 const createPaymentController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
     if(!req.user){
@@ -27,17 +28,43 @@ const createPaymentController=catchAsync(async(req:Request, res:Response, next:N
     });
 });
 
-const confirmPaymentController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
-    // SSLCommerz sends transactional status maps inside req.body
-  const result = await paymentServices.confirmPaymentServices(req.body);
-  // console.log("payload: ",req.body)
-  sendResponse(res, {
-    success: true,
-    statusCode: StatusCodes.OK,
-    message: "Payment verified and recorded successfully.",
-    data: result,
-  });
-});
+// const confirmPaymentController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
+//     // SSLCommerz sends transactional status maps inside req.body
+//   console.log("payload from confirm payment controller: ",req.body)
+//   const result = await paymentServices.confirmPaymentServices(req.body);
+//   sendResponse(res, {
+//     success: true,
+//     statusCode: StatusCodes.OK,
+//     message: "Payment verified and recorded successfully.",
+//     data: result,
+//   });
+// });
+
+const confirmPaymentController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    // 1. SSLCommerz sends transactional status maps inside req.body
+    // console.log("payload from confirm payment controller: ", req.body);
+
+    // 2. Process validation, save database metrics via Prisma transaction, and extract return values
+    await paymentServices.confirmPaymentServices(req.body);
+
+    const frontendUI = envVars.FRONTEND_URL;
+
+    // 3. Evaluate the payment status map to issue browser redirections
+    if (req.body.status === "VALID" || req.body.status === "VALIDATED") {
+      return res.redirect(
+        `${frontendUI}/payment_confirmation?status=success&tranId=${req.body.tran_id}&amount=${req.body.amount}&method=${req.body.card_type}&date=${new Date().toISOString()}`,
+      );
+    } else if (req.body.status === "CANCELLED") {
+      return res.redirect(
+        `${frontendUI}/payment_confirmation?status=cancelled`,
+      );
+    } else {
+      return res.redirect(`${frontendUI}/payment_confirmation?status=failed`);
+    }
+  },
+);
+
 
 const getPaymentHistoryController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
     if (!req.user) throw new AppError("Please login.", StatusCodes.UNAUTHORIZED);
