@@ -26,6 +26,7 @@ const creatPropertyController = catchAsync(
     });
   },
 );
+
 const updatePropertyController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const propertyId = req.params.id;
@@ -53,6 +54,7 @@ const updatePropertyController = catchAsync(
     });
   },
 );
+
 const deletePropertyController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const propertyId = req.params.id;
@@ -78,6 +80,7 @@ const deletePropertyController = catchAsync(
     });
   },
 );
+
 const getRentalRequestsByLandlordController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
@@ -158,9 +161,23 @@ const getMySinglePropertyController=catchAsync(async(req:Request, res:Response, 
   if (!req.user) {
     throw new AppError("Please login.", StatusCodes.UNAUTHORIZED);
   }
-  const userId = req.user.id;
-  const result = await landlordServices.getMySinglePropertyServices(userId);
-})
+  const userId = req.user.id; 
+  const propertyId= req.params.id;
+  if(!propertyId || Array.isArray(propertyId) || typeof propertyId !== "string"){
+    throw new AppError("Property id is required", StatusCodes.BAD_REQUEST)
+  }
+  const result = await landlordServices.getMySinglePropertyServices(
+    userId,
+    propertyId,
+  );
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "Property retrieved successfully.",
+    data: result,
+  });
+});
+
 export const landlordControllers = {
   creatPropertyController,
   updatePropertyController,

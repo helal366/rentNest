@@ -523,7 +523,7 @@ const getMyPropertiesServices=async(userId:string)=>{
   const [myProperties, totalCount] = await prisma.$transaction([
     prisma.property.findMany({
       where: {
-        landlordId: userId
+        landlordId: userId,
       },
       orderBy: {
         createdAt: "desc",
@@ -562,14 +562,79 @@ const getMyPropertiesServices=async(userId:string)=>{
         },
       },
     }),
-    prisma.property.count(),
+    prisma.property.count({
+      where: { landlordId: userId },
+    }),
   ]);
-
+ 
   return { myProperties, totalCount };
 };
 
-const getMySinglePropertyServices = async (userId: string) => {
-  
+const getMySinglePropertyServices = async (
+  userId: string,
+  propertyId: string,
+) => {
+  const property = await prisma.property.findUniqueOrThrow({
+    where: {
+      id: propertyId,
+      landlordId: userId
+    },
+    include: {
+      category: {
+        select: {
+          name: true,
+        },
+      },
+      propertyRentRequests: {
+        select: {
+          requestStatus: true,
+          isPaid: true,
+          tenant: {
+            select: {
+              name: true,
+              email: true,
+              contactNo: true,
+              address: true,
+              userStatus: true,
+            },
+          },
+        },
+      },
+      approvedTenant: {
+        select: {
+          name: true,
+          email: true,
+          contactNo: true,
+          address: true,
+          userStatus: true,
+        },
+      },
+
+      landlord: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          contactNo: true,
+          address: true,
+          userStatus: true,
+        },
+      },
+      propertyReviews: {
+        select: {
+          content: true,
+          rating: true,
+          tenant: {
+            select: {
+              name: true,
+              email: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  return { property };
 };
 export const landlordServices = {
   creatPropertyServices,

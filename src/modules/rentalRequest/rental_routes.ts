@@ -2,14 +2,14 @@ import { Router } from "express";
 import { userAuth } from "../../middlewares/userAuth.js";
 import { rentalRequestControllers } from "./rental_controllers.js";
 import { Role } from "#db-client"; 
-import { createRentalRequestValidationSchema } from "./rental_zod_schema.js";
-import { validateRentalRequest } from "../../middlewares/validateRentalRequest.js";
+import { createRentalRequestValidationSchema } from "../../zod_schemas/rental_zod_schema.js";
+import { validateRequestBody } from "../../middlewares/validateRequestBody.js";
 
 export const rentalRouter: Router = Router();
 rentalRouter.post(
   "/",
   userAuth(Role.TENANT),
-  validateRentalRequest(createRentalRequestValidationSchema),
+  validateRequestBody(createRentalRequestValidationSchema),
   rentalRequestControllers.createRentalRequestController,
 );
 rentalRouter.get(

@@ -2,16 +2,21 @@ import { Router } from "express";
 import { landlordControllers } from "./landlord_controllers.js";
 import { userAuth } from "../../middlewares/userAuth.js";
 import { Role } from "#db-client"; 
+import { validateRequestBody } from "../../middlewares/validateRequestBody.js";
+import { updatePropertyValidationSchema } from "../../zod_schemas/update_property_zod_schema.js";
+import { createPropertyValidationSchema } from "../../zod_schemas/createPropertyZodSchema.js";
 
 export const landlordRouter: Router = Router();
 landlordRouter.post(
   "/properties",
   userAuth(Role.LANDLORD),
+  validateRequestBody(createPropertyValidationSchema),
   landlordControllers.creatPropertyController,
 );
-landlordRouter.put(
+landlordRouter.patch(
   "/properties/:id",
   userAuth(Role.LANDLORD, Role.ADMIN),
+  validateRequestBody(updatePropertyValidationSchema),
   landlordControllers.updatePropertyController,
 );
 landlordRouter.delete(

@@ -5,7 +5,7 @@ import { sendResponse } from "../../utils/sendResponse.js";
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "../../utils/globalErrorHelper.js";
 import { PropertyAmenity, PropertyLocation, RentStatus } from "#db-client"; 
-import { getAllPropertiesQuerySchema } from "./propertyZodSchemas.js";
+import { getAllPropertiesQuerySchema } from "../../zod_schemas/propertyZodSchemas.js";
 
 const getAllPropertiesController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
