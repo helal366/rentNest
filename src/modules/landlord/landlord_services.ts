@@ -23,36 +23,7 @@ const creatPropertyServices = async (
 ) => {
   const { category, rentPrice, amenities, rentStatus, location, areaInSqFt } =
     payload;
-  if (!category) {
-    throw new AppError("Category is required", StatusCodes.BAD_REQUEST);
-  }
-  if (
-    !rentPrice ||
-    typeof rentPrice !== "number" ||
-    rentPrice < 0 ||
-    !Number.isInteger(rentPrice)
-  ) {
-    throw new AppError(
-      "Rent price is required and must be a positive whole number.",
-      StatusCodes.BAD_REQUEST,
-    );
-  }
-  if (!amenities || !Array.isArray(amenities)) {
-    //|| amenities.length === 0
-    throw new AppError("Amenities must be an array.", StatusCodes.BAD_REQUEST);
-  }
 
-  validateAmenities(amenities);
-  if (!location || location?.trim() === "") {
-    return PropertyLocation.JATRABARI;
-  }
-  validateLocation(location);
-  if (typeof areaInSqFt !== "number" || areaInSqFt <= 0) {
-    throw new AppError(
-      "Area must be a positive number.",
-      StatusCodes.BAD_REQUEST,
-    );
-  }
   const createdProperty = await prisma.property.create({
     data: {
       rentPrice,
@@ -67,17 +38,29 @@ const creatPropertyServices = async (
       category: {
         connectOrCreate: {
           where: {
-            name: category.toUpperCase(),
+            name: category.toUpperCase().trim(),
           },
           create: {
-            name: category.toUpperCase(),
+            name: category.toUpperCase().trim(),
           },
         },
       },
       amenities: amenities,
     },
+    include:{
+      category:{
+        select:{
+          name:true
+        }
+      }
+    }
   });
-  return createdProperty;
+const { category: categoryRelation, ...restOfProperty } = createdProperty;
+
+  return {
+    ...restOfProperty,
+    category: categoryRelation.name, 
+  };
 };
 
 const updatePropertyServices = async (

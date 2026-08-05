@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
 
 // Use z.ZodObject<any> to match the Zod v4 structure perfectly
-export const validateRequestBody = (schema: z.ZodObject<any>) => {
+export const validateRequestBody = (schema: z.ZodTypeAny) => {
   return async (
     req: Request,
     res: Response,
