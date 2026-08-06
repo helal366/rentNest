@@ -12,6 +12,10 @@ const getAllPropertiesController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
      const currentURL = envVars.VERCEL_URL;
      console.log({ currentURL });
+
+     const productionurl =
+       process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL;
+       console.log({ productionurl });
     const parsedQuery = getAllPropertiesQuerySchema.parse(req.query);
 
     // console.log("from backend parsedQuery: ",parsedQuery)
