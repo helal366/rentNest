@@ -68,7 +68,7 @@ const confirmPaymentServices = async (payload: IConfirmPaymentPayload) => {
   } else {
     cleanMethod = "WALLET";
   }
-
+  const failedSessionId = `SESSION_FAILED-${uuidv4().substring(0, 8).toUpperCase()}`;
   if (verifiedData.status !== "VALID" && verifiedData.status !== "VALIDATED") {
     return await prisma.payment.create({
       data: {
@@ -78,7 +78,7 @@ const confirmPaymentServices = async (payload: IConfirmPaymentPayload) => {
         landlordId: value_c,
         amount: Number(amount) || 0,
         paymentStatus: "FAILED",
-        sslSessionId: payload.sessionkey || "SESSION_FAILED",
+        sslSessionId: payload.sessionkey || failedSessionId,
         provider: "SSLCOMMERZ",
         method: cleanMethod,
       },

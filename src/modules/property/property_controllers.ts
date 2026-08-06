@@ -43,9 +43,10 @@ const getAllPropertiesController = catchAsync(
           page: parsedQuery.page,
           limit,
           total: result.totalCount,
-          totalPages: Math.ceil(result.totalCount / limit) || 1
+          totalPages: Math.ceil(result.totalCount / limit) || 1,
+          currentUrl: currentURL,
         },
-        properties: result.allProperties
+        properties: result.allProperties,
       },
     });
   },
