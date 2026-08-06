@@ -4,16 +4,13 @@ import { propertyServices } from "./property_services.js";
 import { sendResponse } from "../../utils/sendResponse.js";
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "../../utils/globalErrorHelper.js";
-import { PropertyAmenity, PropertyLocation, RentStatus } from "#db-client"; 
+import {  PropertyLocation, RentStatus } from "#db-client"; 
 import { getAllPropertiesQuerySchema } from "../../zod_schemas/propertyZodSchemas.js";
-import { envVars } from "../../config/index.js";
-import { productionURLfunction } from "../production_url.js";
 
 const getAllPropertiesController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const parsedQuery = getAllPropertiesQuerySchema.parse(req.query);
 
-    // console.log("from backend parsedQuery: ",parsedQuery)
     const limit = parsedQuery.limit 
       ? parsedQuery.limit 
       : parsedQuery.perPage 
@@ -30,9 +27,8 @@ const getAllPropertiesController = catchAsync(
       page: parsedQuery.page,
       limit,
     };
-    // console.log("from backend filters: ", filters)
+    
     const result = await propertyServices.getAllPropertiesServices(filters);
-    const productionurl= productionURLfunction()
     sendResponse(res, {
       success: true,
       statusCode: StatusCodes.OK,
@@ -43,7 +39,6 @@ const getAllPropertiesController = catchAsync(
           limit,
           total: result.totalCount,
           totalPages: Math.ceil(result.totalCount / limit) || 1,
-          productionurl,
         },
         properties: result.allProperties,
       },

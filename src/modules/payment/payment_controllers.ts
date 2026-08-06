@@ -38,8 +38,7 @@ const confirmPaymentController = catchAsync(
     // 2. Process validation, save database metrics via Prisma transaction, and extract return values
     await paymentServices.confirmPaymentServices(req.body);
 
-    const frontendUI = envVars.FRONTEND_URL;
-    console.log("request body status after payment gateway: ", req.body.status);
+    const frontendUI = "https://rent-nest-front-pvtd.vercel.app";
 
     // 3. Evaluate the payment status map to issue browser redirections
     if (req.body.status === "VALID" || req.body.status === "VALIDATED") {
