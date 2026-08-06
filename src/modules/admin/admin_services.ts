@@ -190,7 +190,10 @@ const updateUserBanUnbanServices=async(userId:string, userStatus: string)=>{
         where:{id:userId}
     });
     if(user.userStatus === validStatus){
-        throw new AppError("Already updated to the required status",StatusCodes.BAD_REQUEST)
+        throw new AppError(
+          `Already updated to the required status: ${validStatus}`,
+          StatusCodes.BAD_REQUEST,
+        );
     };
     const updatedUser=await prisma.user.update({
         where:{id:userId},

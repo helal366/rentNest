@@ -6,10 +6,12 @@ import { StatusCodes } from "http-status-codes";
 import { AppError } from "../../utils/globalErrorHelper.js";
 import { PropertyAmenity, PropertyLocation, RentStatus } from "#db-client"; 
 import { getAllPropertiesQuerySchema } from "../../zod_schemas/propertyZodSchemas.js";
+import { envVars } from "../../config/index.js";
 
 const getAllPropertiesController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    
+     const currentURL = envVars.VERCEL_URL;
+     console.log({ currentURL });
     const parsedQuery = getAllPropertiesQuerySchema.parse(req.query);
 
     // console.log("from backend parsedQuery: ",parsedQuery)

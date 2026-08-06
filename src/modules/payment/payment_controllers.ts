@@ -7,6 +7,7 @@ import { AppError } from "../../utils/globalErrorHelper.js";
 import { envVars } from "../../config/index.js";
 
 const createPaymentController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
+  
     if(!req.user){
         throw new AppError("Please login.", StatusCodes.UNAUTHORIZED)
     }
@@ -28,17 +29,6 @@ const createPaymentController=catchAsync(async(req:Request, res:Response, next:N
     });
 });
 
-// const confirmPaymentController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
-//     // SSLCommerz sends transactional status maps inside req.body
-//   console.log("payload from confirm payment controller: ",req.body)
-//   const result = await paymentServices.confirmPaymentServices(req.body);
-//   sendResponse(res, {
-//     success: true,
-//     statusCode: StatusCodes.OK,
-//     message: "Payment verified and recorded successfully.",
-//     data: result,
-//   });
-// });
 
 const confirmPaymentController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -49,6 +39,7 @@ const confirmPaymentController = catchAsync(
     await paymentServices.confirmPaymentServices(req.body);
 
     const frontendUI = envVars.FRONTEND_URL;
+    console.log("request body status after payment gateway: ", req.body.status);
 
     // 3. Evaluate the payment status map to issue browser redirections
     if (req.body.status === "VALID" || req.body.status === "VALIDATED") {

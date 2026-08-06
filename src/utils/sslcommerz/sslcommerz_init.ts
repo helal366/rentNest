@@ -6,9 +6,11 @@ import SSLCommerzPayment from "sslcommerz-lts";
 export const sslCommerzInit = async (rentalRequestId: string) => {
   const { rentalRequest, property, tenant, category } =
     await findData(rentalRequestId);
-  const currentURL = envVars.NODE_ENV === "development"
-      ? envVars.APP_LOCAL_URL
-      : envVars.VERCEL_URL;
+  const currentURL = envVars.VERCEL_URL;
+  console.log({currentURL})
+  // envVars.NODE_ENV === "development"
+  //     ? envVars.APP_LOCAL_URL
+  //     : envVars.VERCEL_URL;
   const store_id = envVars.SSL_COMMERZ_STORE_ID;
   const store_passwd = envVars.SSL_COMMERZ_STORE_PASSWORD;
   const isLive = envVars.NODE_ENV === "production";

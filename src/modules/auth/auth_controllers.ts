@@ -19,7 +19,7 @@ const authRegisterController = catchAsync(async(req:Request, res:Response)=>{
 });
 const authLoginController = catchAsync(async(req:Request, res:Response)=>{
     const payload = req.body;
-    console.log({payload})
+    // console.log({payload})
     const result = await authServices.authLoginServices(payload);
 
     setAuthTokensInCookies(res, result);

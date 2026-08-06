@@ -53,7 +53,7 @@ const updateUserBanUnbanController=catchAsync(async(req: Request, res: Response,
     sendResponse(res, {
         success: true,
         statusCode: StatusCodes.OK,
-        message: "All rental requests retrieved successfully.",
+        message: "User status updated successfully.",
         data: result
     })
 })
