@@ -49,6 +49,7 @@ const getAllPropertiesController = catchAsync(
           total: result.totalCount,
           totalPages: Math.ceil(result.totalCount / limit) || 1,
           currentUrl: currentURL,
+          productionurl,
         },
         properties: result.allProperties,
       },
