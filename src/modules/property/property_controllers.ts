@@ -7,20 +7,10 @@ import { AppError } from "../../utils/globalErrorHelper.js";
 import { PropertyAmenity, PropertyLocation, RentStatus } from "#db-client"; 
 import { getAllPropertiesQuerySchema } from "../../zod_schemas/propertyZodSchemas.js";
 import { envVars } from "../../config/index.js";
+import { productionURLfunction } from "../production_url.js";
 
 const getAllPropertiesController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-     const currentURL = envVars.VERCEL_URL;
-     console.log({ currentURL });
-
-     const rawDomain =
-       process.env.VERCEL_PROJECT_PRODUCTION_URL ||
-       process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL;
-
-     // Ensure it defaults to your primary assignment domain if Vercel hasn't injected it yet
-     const productionurl = rawDomain
-       ? `https://${rawDomain}`
-       : "No raw domain";
     const parsedQuery = getAllPropertiesQuerySchema.parse(req.query);
 
     // console.log("from backend parsedQuery: ",parsedQuery)
@@ -42,7 +32,7 @@ const getAllPropertiesController = catchAsync(
     };
     // console.log("from backend filters: ", filters)
     const result = await propertyServices.getAllPropertiesServices(filters);
-    
+    const productionurl= productionURLfunction()
     sendResponse(res, {
       success: true,
       statusCode: StatusCodes.OK,
@@ -53,7 +43,6 @@ const getAllPropertiesController = catchAsync(
           limit,
           total: result.totalCount,
           totalPages: Math.ceil(result.totalCount / limit) || 1,
-          currentUrl: currentURL,
           productionurl,
         },
         properties: result.allProperties,
