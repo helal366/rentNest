@@ -20,7 +20,7 @@ const getAllPropertiesController = catchAsync(
      // Ensure it defaults to your primary assignment domain if Vercel hasn't injected it yet
      const productionurl = rawDomain
        ? `https://${rawDomain}`
-       : "https://rent-nest-delta.vercel.app";
+       : "No raw domain";
     const parsedQuery = getAllPropertiesQuerySchema.parse(req.query);
 
     // console.log("from backend parsedQuery: ",parsedQuery)
