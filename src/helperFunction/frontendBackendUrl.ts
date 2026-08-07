@@ -1,6 +1,6 @@
 // export const frontendURL = "http://localhost:3000";
-// export const frontendURL = "https://rent-nest-front-pvtd.vercel.app";
-export const frontendURL = "https://rent-nest-front.vercel.app";
+export const frontendURL = "https://rent-nest-front-pvtd.vercel.app";
+// export const frontendURL = "https://rent-nest-front.vercel.app";
 
 
 // export const backendURL = "http://localhost:5000";
