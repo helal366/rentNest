@@ -32,6 +32,7 @@ export interface IConfirmPaymentPayload {
   value_a: string;
   value_b: string;
   value_c: string;
-  sessionkey?: string
+  // value_d:string;
+  sessionkey?: string;
 }
 

@@ -39,6 +39,7 @@ export const sslCommerzInit = async (rentalRequestId: string) => {
     value_a: rentalRequestId,
     value_b: rentalRequest.tenantId,
     value_c: rentalRequest.landlordId,
+    // value_d: rentalRequest.propertyId,
   };
   const sslcz = new SSLCommerzPayment(store_id, store_passwd, isLive);
   const apiResponse = await sslcz.init(initiate);

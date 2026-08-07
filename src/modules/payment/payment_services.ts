@@ -39,6 +39,7 @@ const confirmPaymentServices = async (payload: IConfirmPaymentPayload) => {
     value_a,
     value_b,
     value_c,
+    // value_d,
     sessionkey,
   } = payload;
 
@@ -76,6 +77,7 @@ const confirmPaymentServices = async (payload: IConfirmPaymentPayload) => {
         rentalRequestId: value_a,
         tenantId: value_b,
         landlordId: value_c,
+        // propertyId: value_d,
         amount: Number(amount) || 0,
         paymentStatus: "FAILED",
         sslSessionId: payload.sessionkey || failedSessionId,
