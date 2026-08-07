@@ -99,25 +99,57 @@ const deleteReviewServices = async (reviewId: string) => {
 };
 
 const getAllReviewsServiceLayer = async (userId: string, userRole: Role) => {
-  let reviews;
+  let whereCondition = {};
+
   if (userRole === Role.LANDLORD) {
-    reviews = await prisma.review.findMany({
-      where: {
-        property: {
-          landlordId: userId,
+    whereCondition = {
+      property: {
+        landlordId: userId,
+      },
+    };
+  } else if (userRole === Role.TENANT) {
+    whereCondition = {
+      tenantId: userId,
+    };
+  }
+
+  const reviews = await prisma.review.findMany({
+    where: whereCondition,
+    include: {
+      tenant: {
+        select: {
+          name: true,
+          email: true,
+          address: true,
+          contactNo: true,
         },
       },
-    });
-  } else if (userRole === Role.TENANT) {
-    reviews = await prisma.review.findMany({
-      where: {
-        tenantId: userId,
+      property: {
+        select: {
+          category: {
+            select: {
+              name: true,
+            },
+          },
+          rentStatus: true,
+          rentPrice: true,
+          location: true,
+          amenities: true,
+          areaInSqFt: true,
+          landlord: {
+            select: {
+              name: true,
+              email: true,
+              address: true,
+              contactNo: true,
+            },
+          },
+        },
       },
-    });
-  } else {
-    reviews = await prisma.review.findMany();
-  }
-  return {reviews}
+    },
+  });
+
+  return { reviews };
 };
 export const reviewServices = {
   createReviewServices,

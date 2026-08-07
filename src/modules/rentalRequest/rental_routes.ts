@@ -22,8 +22,3 @@ rentalRouter.get(
   userAuth(Role.LANDLORD, Role.TENANT),
   rentalRequestControllers.getRentalRequestByIdController,
 );
-// rentalRouter.get(
-//   "/single/:id",
-//   userAuth(Role.LANDLORD, Role.TENANT),
-//   rentalRequestControllers.getRentalRequestByIdController,
-// );
