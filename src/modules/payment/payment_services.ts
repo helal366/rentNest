@@ -28,8 +28,6 @@ const createPaymentServices = async (
 };
 
 const confirmPaymentServices = async (payload: IConfirmPaymentPayload) => {
-  // console.log({payload})
-
   const {
     tran_id,
     val_id,
@@ -86,12 +84,6 @@ const confirmPaymentServices = async (payload: IConfirmPaymentPayload) => {
       },
     });
   }
-  // if (verifiedData.status !== "VALID" && verifiedData.status !== "VALIDATED") {
-  //   throw new AppError(
-  //     "Payment validation failed at SSLCommerz",
-  //     StatusCodes.PAYMENT_REQUIRED,
-  //   );
-  // }
 
   // Fetch the actual rental and property data from your system database
   const { property } = await findData(value_a); // value_a contains rentalRequestId

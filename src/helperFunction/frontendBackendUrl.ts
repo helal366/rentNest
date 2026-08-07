@@ -1,14 +1,9 @@
-export const frontendUrlFunction = () => {
-  const frontendUrl = "https://rent-nest-delta.vercel.app";
-  //   const frontendUrl = "http://localhost:3000";
-  return frontendUrl;
-};
+export const frontendURL = "http://localhost:3000";
+// export const frontendUrlFunction = "https://rent-nest-delta.vercel.app";
 
-export const backendUrlFunction = () => {
-  const backendUrl = "https://rent-nest-delta.vercel.app";
-  // const backendUrl = "http://localhost:5000";
-  return backendUrl;
-};
+
+export const backendURL = "http://localhost:5000";
+// export const backendURL = "https://rent-nest-delta.vercel.app";
 
 
 // const rawBackendDomain =

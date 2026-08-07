@@ -41,7 +41,24 @@ const deleteReviewcontroller= catchAsync(async(req:Request, res:Response, next:N
     data: reviewId
   })
 });
+
+const getAllReviewsController = catchAsync(async(req:Request, res:Response, next: NextFunction)=>{
+    if(!req.user){
+      throw new AppError("Please login...", StatusCodes.UNAUTHORIZED)
+    };
+    const userRole = req.user.role;
+    const userId = req.user.id;
+    const result = await reviewServices.getAllReviewsServiceLayer(userId, userRole);
+    sendResponse(res, {
+      success: true,
+      message: "All reviews retrieved successfully.",
+      statusCode: StatusCodes.OK,
+      data: result
+    })
+
+});
 export const reviewControllers = {
   createReviewController,
-  deleteReviewcontroller
+  deleteReviewcontroller,
+  getAllReviewsController,
 };

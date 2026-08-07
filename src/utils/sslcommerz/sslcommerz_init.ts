@@ -2,11 +2,12 @@ import { envVars } from "../../config/index.js";
 import { v4 as uuidv4 } from "uuid";
 import { findData } from "./findData.js";
 import SSLCommerzPayment from "sslcommerz-lts";
+import { backendURL } from "../../helperFunction/frontendBackendUrl.js";
 
 export const sslCommerzInit = async (rentalRequestId: string) => {
   const { rentalRequest, property, tenant, category } =
     await findData(rentalRequestId);
-  const currentURL = "https://rent-nest-delta.vercel.app";
+  const currentBackendUrl = backendURL;  //backend rul
   const store_id = envVars.SSL_COMMERZ_STORE_ID;
   const store_passwd = envVars.SSL_COMMERZ_STORE_PASSWORD;
   const isLive = envVars.NODE_ENV === "production";
@@ -17,10 +18,10 @@ export const sslCommerzInit = async (rentalRequestId: string) => {
     total_amount: property.rentPrice,
     currency: "BDT",
     tran_id: transactionId, // use unique tran_id for each api call
-    success_url: `${currentURL}/api/payments/confirm`, // Added tracking query parameters
-    fail_url: `${currentURL}/api/payments/confirm`,
-    cancel_url: `${currentURL}/api/payments/confirm`,
-    ipn_url: `${currentURL}/ipn-success-payment`,
+    success_url: `${currentBackendUrl}/api/payments/confirm`, // Added tracking query parameters
+    fail_url: `${currentBackendUrl}/api/payments/confirm`,
+    cancel_url: `${currentBackendUrl}/api/payments/confirm`,
+    ipn_url: `${currentBackendUrl}/ipn-success-payment`,
     // ipn_url: `${currentURL}/ipn-success-payment`,
     shipping_method: "NO",
     product_name: `${category.name} Rental`,

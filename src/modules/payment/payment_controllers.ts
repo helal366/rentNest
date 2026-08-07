@@ -4,7 +4,7 @@ import { sendResponse } from "../../utils/sendResponse.js";
 import { StatusCodes } from "http-status-codes";
 import { paymentServices } from "./payment_services.js";
 import { AppError } from "../../utils/globalErrorHelper.js";
-import { envVars } from "../../config/index.js";
+import { frontendURL } from "../../helperFunction/frontendBackendUrl.js";
 
 const createPaymentController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
   
@@ -36,14 +36,15 @@ const confirmPaymentController = catchAsync(
     // console.log("payload from confirm payment controller: ", req.body);
 
     // 2. Process validation, save database metrics via Prisma transaction, and extract return values
-    await paymentServices.confirmPaymentServices(req.body);
-
-    const frontendUI = "https://rent-nest-front-pvtd.vercel.app";
+    const result= await paymentServices.confirmPaymentServices(req.body);
+    const rentalId = result.rentalRequestId;
+    const paymentId = result.id;
+    const frontendUI = frontendURL;  //frontend url
 
     // 3. Evaluate the payment status map to issue browser redirections
     if (req.body.status === "VALID" || req.body.status === "VALIDATED") {
       return res.redirect(
-        `${frontendUI}/payment_confirmation?status=success&tranId=${req.body.tran_id}&amount=${req.body.amount}&method=${req.body.card_type}&date=${new Date().toISOString()}`,
+        `${frontendUI}/payment_confirmation?status=success&paymentId=${paymentId}&rentalId=${rentalId}&tranId=${req.body.tran_id}&amount=${req.body.amount}&method=${req.body.card_type}&date=${new Date().toISOString()}`,
       );
     } else if (req.body.status === "CANCELLED") {
       return res.redirect(

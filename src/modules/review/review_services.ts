@@ -2,7 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { AppError } from "../../utils/globalErrorHelper.js";
 import { prisma } from "../../lib/prisma.js";
 import { ICreateReviewPayload } from "./review_interfaces.js";
-import { PropertyRentRequestStatus, Role } from "#db-client"; 
+import { PropertyRentRequestStatus, Role } from "#db-client";
 
 const createReviewServices = async (payload: ICreateReviewPayload) => {
   const { tenantId, tenantRole, propertyId, content, rating } = payload;
@@ -25,18 +25,15 @@ const createReviewServices = async (payload: ICreateReviewPayload) => {
   });
 
   if (!rentalRequest) {
-    throw new AppError(
-      "Rental request not found.",
-      StatusCodes.BAD_REQUEST,
-    );
+    throw new AppError("Rental request not found.", StatusCodes.BAD_REQUEST);
   }
-  if(rentalRequest.requestStatus !== "APPROVED"){
+  if (rentalRequest.requestStatus !== "APPROVED") {
     throw new AppError(
       "You can only review properties after the landlord approval and successful payment.",
       StatusCodes.BAD_REQUEST,
     );
   }
-  if(rentalRequest.requestStatus === "APPROVED" && !rentalRequest.isPaid){
+  if (rentalRequest.requestStatus === "APPROVED" && !rentalRequest.isPaid) {
     throw new AppError(
       "You can only review properties after the landlord approval and successful payment.",
       StatusCodes.BAD_REQUEST,
@@ -80,24 +77,50 @@ const createReviewServices = async (payload: ICreateReviewPayload) => {
 
   return review;
 };
+
 const deleteReviewServices = async (reviewId: string) => {
   console.log("Attempting to delete review with ID:", reviewId);
 
   const result = await prisma.review.deleteMany({
     where: {
-      id: reviewId // Make sure this exactly matches your DB string type
-    }
+      id: reviewId, // Make sure this exactly matches your DB string type
+    },
   });
 
   console.log("Prisma delete result count:", result.count);
 
   if (result.count === 0) {
     // This stops the controller from sending a fake success message to Postman
-    throw new AppError(`No review found with ID ${reviewId}. Database unchanged.`, StatusCodes.NOT_FOUND);
+    throw new AppError(
+      `No review found with ID ${reviewId}. Database unchanged.`,
+      StatusCodes.NOT_FOUND,
+    );
   }
-}
+};
 
+const getAllReviewsServiceLayer = async (userId: string, userRole: Role) => {
+  let reviews;
+  if (userRole === Role.LANDLORD) {
+    reviews = await prisma.review.findMany({
+      where: {
+        property: {
+          landlordId: userId,
+        },
+      },
+    });
+  } else if (userRole === Role.TENANT) {
+    reviews = await prisma.review.findMany({
+      where: {
+        tenantId: userId,
+      },
+    });
+  } else {
+    reviews = await prisma.review.findMany();
+  }
+  return {reviews}
+};
 export const reviewServices = {
   createReviewServices,
-  deleteReviewServices
+  deleteReviewServices,
+  getAllReviewsServiceLayer,
 };

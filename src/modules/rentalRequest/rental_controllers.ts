@@ -60,9 +60,10 @@ const getRentalRequestByIdController=catchAsync(async(req:Request, res:Response,
     sendResponse(res, {
         success: true,
         statusCode: StatusCodes.OK,
+        message: "Rental request retrieved successfully.",
         data: result
     })
-})
+});
 export const rentalRequestControllers= {
     createRentalRequestController,
     getRentalRequestsByTenantOrLandlordController,
