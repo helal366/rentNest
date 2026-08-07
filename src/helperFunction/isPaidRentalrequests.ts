@@ -14,6 +14,11 @@ export const isPaidRentalrequests = async (userId: string): Promise<RentalReques
         select: {
           id: true,
           rentStatus: true,
+          category:{
+            select:{
+              name: true
+            }
+          },
           approvedTenant: {
             select: {
               name: true,
