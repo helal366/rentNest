@@ -2,7 +2,7 @@ model Payment{
     id String @id @default(uuid())
     transactionId String @unique
 
-    rentalRequestId String 
+    rentalRequestId String
     rentalRequest RentalRequest @relation(name: "PaymentToRentalRequest", fields: [rentalRequestId], references: [id], onDelete:Cascade)
     
     tenantId String

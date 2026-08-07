@@ -64,8 +64,25 @@ const getRentalRequestByIdController=catchAsync(async(req:Request, res:Response,
         data: result
     })
 });
-export const rentalRequestControllers= {
-    createRentalRequestController,
-    getRentalRequestsByTenantOrLandlordController,
-    getRentalRequestByIdController
-}
+const getRentalRequestsIsPaidController=catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
+     if (!req.user) {
+       throw new AppError("Please login", StatusCodes.UNAUTHORIZED);
+     }
+     const userId = req.user.id;
+    const result =
+      await rentalRequestServices.getRentalRequestIsPaidServiceLayer(userId);
+    const message = "Tenant rental requests retrieved successfully.";
+     
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.OK,
+      message,
+      data: result,
+    });
+});
+export const rentalRequestControllers = {
+  createRentalRequestController,
+  getRentalRequestsByTenantOrLandlordController,
+  getRentalRequestByIdController,
+  getRentalRequestsIsPaidController,
+};

@@ -18,6 +18,11 @@ rentalRouter.get(
   rentalRequestControllers.getRentalRequestsByTenantOrLandlordController,
 );
 rentalRouter.get(
+  "/isPaid",
+  userAuth(Role.TENANT),
+  rentalRequestControllers.getRentalRequestsIsPaidController,
+);
+rentalRouter.get(
   "/:id",
   userAuth(Role.LANDLORD, Role.TENANT),
   rentalRequestControllers.getRentalRequestByIdController,

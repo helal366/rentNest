@@ -4,6 +4,7 @@ import { AppError } from "../../utils/globalErrorHelper.js";
 import { ICreateRentalRequestPayload, IGetRentalRequestByIdPayload } from "./rental_interfaces.js";
 import { Role } from "#db-client"; 
 import { authGetRentalRequestsByUser } from "../../helperFunction/authGetRentalRequestsByUser.js";
+import { isPaidRentalrequests } from "../../helperFunction/isPaidRentalrequests.js";
 
 const createRentalRequestServices = async (
   payload: ICreateRentalRequestPayload,
@@ -73,7 +74,7 @@ const getRentalRequestByIdServices = async (
   payload: IGetRentalRequestByIdPayload,
 ) => {
   const { rentalRequestId, userId, userRole } = payload;
-  const rentalRequest = await prisma.rentalRequest.findUniqueOrThrow({
+  const rentalRequest = await prisma.rentalRequest.findUnique({
     where: {
       id: rentalRequestId,
     },
@@ -124,6 +125,13 @@ const getRentalRequestByIdServices = async (
       },
     },
   });
+
+  if (!rentalRequest) {
+    throw new AppError(
+      "Rental request record not found.",
+      StatusCodes.NOT_FOUND,
+    );
+  }
   if (userRole === Role.TENANT) {
     if (userId !== rentalRequest.tenantId) {
       throw new AppError(
@@ -143,8 +151,14 @@ const getRentalRequestByIdServices = async (
   return { rentalRequest };
 };
 
+const getRentalRequestIsPaidServiceLayer = async (userId:string) => {
+  const isPaidRentalRequests = await isPaidRentalrequests(userId);
+  return isPaidRentalRequests
+};
+
 export const rentalRequestServices = {
   createRentalRequestServices,
   getRentalRequestsByTenantOrLandlordServices,
   getRentalRequestByIdServices,
+  getRentalRequestIsPaidServiceLayer,
 };
